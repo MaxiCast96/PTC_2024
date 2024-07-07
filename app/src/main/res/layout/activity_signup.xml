@@ -9,6 +9,57 @@
     android:backgroundTint="#362F5C"
     tools:context=".activity_signup">
 
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/AnimCrearCuenta"
+        android:layout_width="145dp"
+        android:layout_height="127dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.14"
+        app:lottie_autoPlay="true"
+        app:lottie_rawRes="@raw/foto" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/AnimFoto"
+        android:layout_width="69dp"
+        android:layout_height="59dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.69"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.227"
+        app:lottie_autoPlay="true"
+        app:lottie_rawRes="@raw/cleaned_camara" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/txtNombre"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#F85D74"
+        android:hint="Nombre"
+        android:textColorHint="#FFFFFF"
+        app:boxStrokeColor="#F85D74"
+        app:cursorColor="#F85D74"
+        app:helperTextTextColor="#F85D74"
+        app:hintTextColor="#F85D74"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.33"
+        app:placeholderTextColor="#F85D74"
+        app:prefixTextColor="#F85D74"
+        app:suffixTextColor="#F85D74">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#A42833" />
+    </com.google.android.material.textfield.TextInputLayout>
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/txtCorreo"
         android:layout_width="300dp"
@@ -24,7 +75,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.32999998"
+        app:layout_constraintVertical_bias="0.43"
         app:placeholderTextColor="#F85D74"
         app:prefixTextColor="#F85D74"
         app:suffixTextColor="#F85D74">
@@ -33,14 +84,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#A42833" />
-
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/txtContraseña"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:hint="Confirmar contraseña"
+        android:hint="Contraseña"
         android:textColorHint="#FFFFFF"
         app:boxStrokeColor="#F85D74"
         app:cursorColor="#F85D74"
@@ -49,22 +99,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.57">
+        app:layout_constraintVertical_bias="0.55">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#A42833"
-            android:password="true" />
-
+            android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
-
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/txtConfirmarContraseña"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:hint="contraseña"
+        android:hint="Confirmar Contraseña"
         android:textColorHint="#FFFFFF"
         app:boxStrokeColor="#F85D74"
         app:cursorColor="#F85D74"
@@ -73,18 +121,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.45">
+        app:layout_constraintVertical_bias="0.67">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#A42833"
-            android:password="true" />
-
+            android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/btn_login"
+        android:id="@+id/btnCrearCuenta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="#F85D74"
@@ -94,22 +141,22 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.698" />
+        app:layout_constraintVertical_bias="0.80" />
 
     <Button
-        android:id="@+id/btnCrearCuenta"
+        android:id="@+id/btn_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:backgroundTint="#00FFFFFF"
-        android:text="Inicia Sesiòn!"
+        android:text="Inicia Sesión!"
         android:textColor="#F85D74"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/textView4"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.78" />
+        app:layout_constraintVertical_bias="0.90" />
 
     <TextView
         android:id="@+id/textView4"
@@ -122,7 +169,7 @@
         app:layout_constraintHorizontal_bias="0.26"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.768" />
+        app:layout_constraintVertical_bias="0.88" />
 
     <TextView
         android:id="@+id/textView6"
@@ -132,18 +179,8 @@
         android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.547"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.237" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="412dp"
-        android:layout_height="243dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView6"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/signup_placeholder" />
+        app:layout_constraintVertical_bias="0.05" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

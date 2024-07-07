@@ -13,6 +13,12 @@
         android:theme="@style/Theme.Material3.Dark"
         tools:targetApi="31">
         <activity
+            android:name=".activity_restablcer_cantra"
+            android:exported="false" />
+        <activity
+            android:name=".activity_correo"
+            android:exported="false" />
+        <activity
             android:name=".activity_signup"
             android:exported="false" />
         <activity
