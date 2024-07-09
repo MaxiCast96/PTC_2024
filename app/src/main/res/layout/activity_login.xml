@@ -11,17 +11,17 @@
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/AnimLogin"
-        android:layout_width="266dp"
-        android:layout_height="247dp"
+        android:layout_width="188dp"
+        android:layout_height="155dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.482"
+        app:layout_constraintHorizontal_bias="0.484"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        app:lottie_rawRes="@raw/mobiphonechatting"
+        app:layout_constraintVertical_bias="0.081"
         app:lottie_autoPlay="true"
-        app:lottie_loop="true"/>
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/loginmovie" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/AnimSucces"
@@ -75,7 +75,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.59000003">
+        app:layout_constraintVertical_bias="0.59000003"
+        app:passwordToggleEnabled="true"
+        app:passwordToggleTint="#FFFFFF">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -126,7 +128,7 @@
         app:layout_constraintVertical_bias="0.78" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/btnRecuContra"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="#00FFFFFF"

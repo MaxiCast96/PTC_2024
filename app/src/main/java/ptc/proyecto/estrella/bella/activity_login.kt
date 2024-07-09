@@ -53,5 +53,10 @@ class activity_login : AppCompatActivity() {
             val intent = Intent(this, activity_signup::class.java)
             startActivity(intent)
         }
+        val btnRecuContra: Button = findViewById(R.id.btnRecuContra)
+        btnRecuContra.setOnClickListener {
+            val intent = Intent(this, activity_correo::class.java)
+            startActivity(intent)
+        }
     }
 }

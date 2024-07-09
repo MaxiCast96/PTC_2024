@@ -17,22 +17,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.14"
+        app:layout_constraintVertical_bias="0.168"
         app:lottie_autoPlay="true"
-        app:lottie_rawRes="@raw/foto" />
-
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/AnimFoto"
-        android:layout_width="69dp"
-        android:layout_height="59dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.69"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.227"
-        app:lottie_autoPlay="true"
-        app:lottie_rawRes="@raw/cleaned_camara" />
+        app:lottie_rawRes="@raw/newphoto" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/txtNombre"
@@ -49,7 +36,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.33"
+        app:layout_constraintVertical_bias="0.40"
         app:placeholderTextColor="#F85D74"
         app:prefixTextColor="#F85D74"
         app:suffixTextColor="#F85D74">
@@ -75,7 +62,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.43"
+        app:layout_constraintVertical_bias="0.50"
         app:placeholderTextColor="#F85D74"
         app:prefixTextColor="#F85D74"
         app:suffixTextColor="#F85D74">
@@ -99,7 +86,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.55">
+        app:layout_constraintVertical_bias="0.60"
+        app:passwordToggleEnabled="true"
+        app:passwordToggleTint="#FFFFFF">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -121,7 +110,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.67">
+        app:layout_constraintVertical_bias="0.70"
+        app:passwordToggleEnabled="true"
+        app:passwordToggleTint="#FFFFFF">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -182,5 +173,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.05" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="151dp"
+        android:layout_height="153dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.155"
+        app:srcCompat="@drawable/circulo" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/AnimFoto"
+        android:layout_width="69dp"
+        android:layout_height="59dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.716"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.266"
+        app:lottie_rawRes="@raw/camara" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
