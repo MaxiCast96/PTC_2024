@@ -146,6 +146,7 @@
         android:layout_width="242dp"
         android:layout_height="43dp"
         android:text="Inicio de Sesión"
+        android:textColor="#F8F8F8"
         android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
