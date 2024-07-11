@@ -19,8 +19,8 @@ class ClaseConexion {
             //val LaboratorioAldo = DriverManager.getConnection("", "", "")
 
             //Guillermo
-            //val Guillermo = DriverManager.getConnection("jdbc:oracle:thin:@192.168.1.17:1521:xe", "Guille", "fortnite_2017")
-            //val LaboratorioGuille = DriverManager.getConnection("jdbc:oracle:thin:@192.168.1.17:1521:xe","GUILLE_PTC","holacanola123")
+            val Guillermo = DriverManager.getConnection("jdbc:oracle:thin:@192.168.1.17:1521:xe", "Guille", "fortnite_2017")
+            val LaboratorioGuille = DriverManager.getConnection("jdbc:oracle:thin:@192.168.1.17:1521:xe","GUILLE_PTC","holacanola123")
 
             //Luis
             //val Luis = DriverManager.getConnection("", "", "")
@@ -34,7 +34,7 @@ class ClaseConexion {
             //val Rene = DriverManager.getConnection("", "", "")
             //val LaboratorioRene = DriverManager.getConnection("", "", "")
 
-            val default = "PON TU PROPIO RETURN"
+            val default = LaboratorioGuille
             return default
 
         }catch (e: Exception){
