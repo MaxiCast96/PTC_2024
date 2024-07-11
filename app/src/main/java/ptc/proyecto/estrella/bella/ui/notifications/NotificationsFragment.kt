@@ -44,7 +44,7 @@ class NotificationsFragment : Fragment() {
         val btnEditPayment = root.findViewById<Button>(R.id.btnDetalleFacturaEdit)
 
         TODO("ARREGLAR ESTA MADRE")
-        btnEditUser.setOnClickListener{
+        /*btnEditUser.setOnClickListener{
             //Edit User
             val context = this.context
 
@@ -55,6 +55,8 @@ class NotificationsFragment : Fragment() {
             textBox.setHint(listaUsuarios.nombre)
 
         }
+        
+         */
         return root
     }
 
