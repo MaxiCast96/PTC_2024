@@ -28,13 +28,13 @@ class ClaseConexion {
 
             //Lima
             //val Lima = DriverManager.getConnection("jdbc:oracle:thin:@192.168.1.8:1521:xe", "Lima_PTC", "del1al6")
-            //val LaboratorioLima = DriverManager.getConnection("jdbc:oracle:thin:@10.10.2.70:1521:xe", "Lima_PTC", "del1al6")
+            val LaboratorioLima = DriverManager.getConnection("jdbc:oracle:thin:@10.10.2.70:1521:xe", "Lima_PTC", "del1al6")
 
             //Rene
             //val Rene = DriverManager.getConnection("", "", "")
             //val LaboratorioRene = DriverManager.getConnection("", "", "")
 
-            return default
+            return LaboratorioLima
 
         }catch (e: Exception){
             println("El error es este: $e")

@@ -1,5 +1,6 @@
 package ptc.proyecto.estrella.bella.ui.notifications
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -39,34 +40,24 @@ class NotificationsFragment : Fragment() {
         _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val btnEditUser = root.findViewById<Button>(R.id.btnEditUser)
+        //Botones
         val btnEditName = root.findViewById<Button>(R.id.btnEditName)
         val btnEditPayment = root.findViewById<Button>(R.id.btnDetalleFacturaEdit)
+        val btnLogout = root.findViewById<Button>(R.id.btnLogout)
 
+        //Labels
+        val lblName = root.findViewById<TextView>(R.id.lblNombre)
+        val lblEmail = root.findViewById<TextView>(R.id.lblEmail)
 
-        btnEditUser.setOnClickListener {
-            //Editar Usuario
-            val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle("Editar Usuario")
+        //Obtener Nombre y Correo
+        val nameReceived = arguments?.getString("nombre")
+        val emailReceived = arguments?.getString("email")
 
-            //Textbox
-            val textBox = EditText(context)
-            textBox.setHint("Nombre")
-            builder.setView(textBox)
+        //Mostrar Nombre y Correo
+        lblName.text = nameReceived
+        lblEmail.text = emailReceived
 
-            //Botones
-            builder.setPositiveButton("Guardar"){
-                    dialog, wich ->
-                println("NO TERMINADO")
-            }
-
-            builder.setNegativeButton("Cancelar"){
-                    dialog, wich ->
-                dialog.dismiss()
-            }
-            builder.show()
-        }
-
+        //Editar Nombre
         btnEditName.setOnClickListener {
             //Editar Nombre
             val builder = AlertDialog.Builder(requireContext())
@@ -84,6 +75,9 @@ class NotificationsFragment : Fragment() {
             }
             builder.show()
         }
+
+
+
         return root
     }
 
