@@ -71,6 +71,7 @@ class NotificationsFragment : Fragment() {
             //Editar Nombre
             val builder = AlertDialog.Builder(requireContext())
             //Textbox
+            val textBox = EditText(context)
             textBox.setHint("Nombre")
             builder.setView(textBox)
 
@@ -82,7 +83,7 @@ class NotificationsFragment : Fragment() {
                 dialog.dismiss()
             }
             builder.show()
-        
+        }
         return root
     }
 
