@@ -15,7 +15,7 @@ class ClaseConexion {
             */
 
             //Aldo
-            //val Aldo = DriverManager.getConnection("", "", "")
+            val Aldo = DriverManager.getConnection("jdbc:oracle:thin:@192.168.1.30:1521:xe", "ANDRE_DEVELOPER", "1234")
             //val LaboratorioAldo = DriverManager.getConnection("", "", "")
 
             //Guillermo
@@ -34,7 +34,7 @@ class ClaseConexion {
             //val Rene = DriverManager.getConnection("", "", "")
             //val LaboratorioRene = DriverManager.getConnection("", "", "")
 
-            return default
+            return Aldo
 
         }catch (e: Exception){
             println("El error es este: $e")
