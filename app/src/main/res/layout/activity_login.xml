@@ -170,7 +170,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.48000002"
+        app:layout_constraintVertical_bias="0.46"
         app:placeholderTextColor="#F85D74"
         app:prefixTextColor="#F85D74"
         app:suffixTextColor="#F85D74">
@@ -195,7 +195,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.59000003"
+        app:layout_constraintVertical_bias="0.59"
         app:passwordToggleEnabled="true"
         app:passwordToggleTint="#FFFFFF">
 

@@ -1,51 +1,63 @@
 package ptc.proyecto.estrella.bella
 
+
 import android.content.Intent
 import android.os.Bundle
+import android.util.Patterns
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import ptc.proyecto.estrella.bella.databinding.ActivityMainBinding
+import com.airbnb.lottie.LottieAnimationView
+import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.delay
 
 class activity_correo : AppCompatActivity() {
-    private lateinit var binding: ActivityMainBinding
+
+    private lateinit var txtCorreoRecuperacion: TextInputLayout
+    private lateinit var animCorreo: LottieAnimationView
+
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        val navView: BottomNavigationView = binding.navView
-
-        val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
-            )
-        )
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
-        getSupportActionBar()?.hide()
-        enableEdgeToEdge()
         setContentView(R.layout.activity_correo)
+
+        txtCorreoRecuperacion = findViewById(R.id.txtCorreoRecuperacion)
+        animCorreo = findViewById(R.id.AnimCorreo)
+
+        val btnEnviarCodigo: Button = findViewById(R.id.btnEnviarCodigo)
+        btnEnviarCodigo.setOnClickListener {
+            if (validarCorreo()) {
+                animCorreo.playAnimation()
+                val intent = Intent(this, activity_RepuperarContra::class.java)
+                startActivity(intent)
+            } else {
+                txtCorreoRecuperacion.error = "Correo inválido"
+            }
+        }
+
+        supportActionBar?.hide()
+        enableEdgeToEdge()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        val btnEnviarCodigo: Button = findViewById(R.id.btnEnviarCodigo)
-        btnEnviarCodigo.setOnClickListener {
-            val Intent = Intent(this, activity_RepuperarContra::class.java)
-            startActivity(Intent)
+    }
+
+    private fun validarCorreo(): Boolean {
+        val correo = txtCorreoRecuperacion.editText?.text.toString().trim()
+
+        if (correo.isEmpty()) {
+            txtCorreoRecuperacion.error = "El correo es obligatorio"
+            return false
+        } else if (!correo.contains('@') || !correo.contains('.')) {
+            txtCorreoRecuperacion.error = "El correo debe contener '@' y '.'"
+            return false
+
+
         }
+
+        return true
     }
 }
