@@ -43,7 +43,6 @@ class NotificationsFragment : Fragment() {
         val btnEditName = root.findViewById<Button>(R.id.btnEditName)
         val btnEditPayment = root.findViewById<Button>(R.id.btnDetalleFacturaEdit)
 
-
         return root
     }
 
