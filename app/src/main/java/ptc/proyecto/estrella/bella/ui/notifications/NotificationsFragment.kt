@@ -43,6 +43,53 @@ class NotificationsFragment : Fragment() {
         val btnEditName = root.findViewById<Button>(R.id.btnEditName)
         val btnEditPayment = root.findViewById<Button>(R.id.btnDetalleFacturaEdit)
 
+
+        btnEditUser.setOnClickListener {
+            //Editar Usuario
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Editar Usuario")
+
+            //Textbox
+            val textBox = EditText(context)
+            textBox.setHint("Nombre")
+            builder.setView(textBox)
+
+            //Botones
+            builder.setPositiveButton("Guardar"){
+                    dialog, wich ->
+                println("NO TERMINADO")
+            }
+
+            builder.setNegativeButton("Cancelar"){
+                    dialog, wich ->
+                dialog.dismiss()
+            }
+            builder.show()
+        }
+
+        btnEditName.setOnClickListener {
+            //Editar Nombre
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Editar Usuario")
+
+            //Textbox
+            val textBox = EditText(context)
+            textBox.setHint("Nombre")
+            builder.setView(textBox)
+
+            //Botones
+            builder.setPositiveButton("Guardar"){
+                    dialog, wich ->
+                println("NO TERMINADO")
+            }
+
+            builder.setNegativeButton("Cancelar"){
+                    dialog, wich ->
+                dialog.dismiss()
+            }
+            builder.show()
+        }
+        
         return root
     }
 
