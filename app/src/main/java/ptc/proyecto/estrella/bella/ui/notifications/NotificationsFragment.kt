@@ -82,7 +82,7 @@ class NotificationsFragment : Fragment() {
                 dialog.dismiss()
             }
             builder.show()
-        
+        }
         return root
     }
 
