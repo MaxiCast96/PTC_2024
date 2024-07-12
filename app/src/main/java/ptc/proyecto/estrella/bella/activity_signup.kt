@@ -1,107 +1,108 @@
 package ptc.proyecto.estrella.bella
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
 import com.airbnb.lottie.LottieAnimationView
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import ptc.proyecto.estrella.bella.databinding.ActivityMainBinding
+import com.google.android.material.textfield.TextInputLayout
 
 class activity_signup : AppCompatActivity() {
-    private lateinit var binding: ActivityMainBinding
-    private lateinit var animFoto: LottieAnimationView
 
-    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        uri?.let {
-            //manejar la imagen seleccionada
-            Toast.makeText(this, "Imagen seleccionada: $uri", Toast.LENGTH_SHORT).show()
-        }
-    }
+    private lateinit var animFoto: LottieAnimationView
+    private lateinit var txtNombre: TextInputLayout
+    private lateinit var txtCorreo: TextInputLayout
+    private lateinit var txtContraseña: TextInputLayout
+    private lateinit var txtConfirmarContraseña: TextInputLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        val navView: BottomNavigationView = binding.navView
-
-        val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
-            )
-        )
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
-        supportActionBar?.hide()
-        enableEdgeToEdge()
         setContentView(R.layout.activity_signup)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
 
+        txtNombre = findViewById(R.id.txtNombre)
+        txtCorreo = findViewById(R.id.txtCorreo)
+        txtContraseña = findViewById(R.id.txtContraseña)
+        txtConfirmarContraseña = findViewById(R.id.txtConfirmarContraseña)
         animFoto = findViewById(R.id.AnimFoto)
+
         val btnCrearCuenta: Button = findViewById(R.id.btnCrearCuenta)
         val btn_login: Button = findViewById(R.id.btn_login)
 
         animFoto.setOnClickListener {
             animFoto.playAnimation()
-            checkPermissionAndOpenGallery()
+            // Aquí podría ir la lógica para elegir una imagen de la galería
         }
 
         btnCrearCuenta.setOnClickListener {
-            val intent = Intent(this, activity_login::class.java)
-            startActivity(intent)
+            if (validarFormulario()) {
+                // Lógica para crear la cuenta
+                val intent = Intent(this, activity_login::class.java)
+                startActivity(intent)
+            }
         }
 
         btn_login.setOnClickListener {
+            // Lógica para iniciar sesión
             val intent = Intent(this, activity_login::class.java)
             startActivity(intent)
         }
+
+        supportActionBar?.hide()
+        enableEdgeToEdge()
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
     }
 
-    private fun checkPermissionAndOpenGallery() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            openGallery()
+    private fun validarFormulario(): Boolean {
+        val nombre = txtNombre.editText?.text.toString().trim()
+        val correo = txtCorreo.editText?.text.toString().trim()
+        val contraseña = txtContraseña.editText?.text.toString().trim()
+        val confirmarContraseña = txtConfirmarContraseña.editText?.text.toString().trim()
+
+        if (nombre.isEmpty()) {
+            txtNombre.error = "El nombre es obligatorio"
+            return false
         } else {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), REQUEST_PERMISSION)
+            txtNombre.error = null
         }
-    }
 
-    private fun openGallery() {
-        pickImageLauncher.launch("image/*")
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_PERMISSION) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                openGallery()
-            } else {
-                Toast.makeText(this, "Permiso denegado para acceder a la galería", Toast.LENGTH_SHORT).show()
-            }
+        if (correo.isEmpty()) {
+            txtCorreo.error = "El correo es obligatorio"
+            return false
+        } else if (!correo.contains('@') || !correo.contains('.')) {
+            txtCorreo.error = "El correo debe contener '@' y '.'"
+            return false
+        } else {
+            txtCorreo.error = null
         }
-    }
 
-    companion object {
-        private const val REQUEST_PERMISSION = 1001
+        if (contraseña.isEmpty()) {
+            txtContraseña.error = "La contraseña es obligatoria"
+            return false
+        } else if (contraseña.length < 6) {
+            txtContraseña.error = "La contraseña debe tener al menos 6 caracteres"
+            return false
+        } else {
+            txtContraseña.error = null
+        }
+
+        if (confirmarContraseña.isEmpty()) {
+            txtConfirmarContraseña.error = "Confirmar la contraseña es obligatorio"
+            return false
+        } else if (contraseña != confirmarContraseña) {
+            txtConfirmarContraseña.error = "Las contraseñas no coinciden"
+            return false
+        } else {
+            txtConfirmarContraseña.error = null
+        }
+
+        return true
     }
 }
