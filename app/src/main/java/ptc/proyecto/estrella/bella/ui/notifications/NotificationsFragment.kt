@@ -61,7 +61,7 @@ class NotificationsFragment : Fragment() {
         //Mostrar Nombre y Correo
         lblName.text = nameReceived
         lblEmail.text = emailReceived
-        // TODO:  imgProfile.setImageBitmap(pfpReceived) 
+        // TODO:  imgProfile.setImageBitmap(pfpReceived)
 
         //Editar Nombre
         btnEditName.setOnClickListener {

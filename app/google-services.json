@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "394879238708",
+    "project_id": "cinemanow-ptc-2024",
+    "storage_bucket": "cinemanow-ptc-2024.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:394879238708:android:2e5401e55071d9f2748061",
+        "android_client_info": {
+          "package_name": "ptc.proyecto.estrella.bella"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAA1RWk4pQvCXrx7KCLO2IF8kLp3zEsYqA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
