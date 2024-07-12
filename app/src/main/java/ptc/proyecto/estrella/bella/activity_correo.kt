@@ -29,7 +29,7 @@ class activity_correo : AppCompatActivity() {
         btnEnviarCodigo.setOnClickListener {
             if (validarCorreo()) {
                 animCorreo.playAnimation()
-                val intent = Intent(this, activity_RepuperarContra::class.java)
+                val intent = Intent(this, activity_codigo::class.java)
                 startActivity(intent)
             } else {
                 txtCorreoRecuperacion.error = "Correo inválido"
