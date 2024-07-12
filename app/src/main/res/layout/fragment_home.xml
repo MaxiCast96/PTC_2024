@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="#362F5C"
+    android:backgroundTint="#362F5C"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,11 +10,23 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/button7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="550dp"
+                android:text="Button"
+                app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView" />
 
             <HorizontalScrollView
                 android:id="@+id/horizontalScrollView"
@@ -43,7 +57,7 @@
                         android:id="@+id/imgIntensamente"
                         android:layout_width="295dp"
                         android:layout_height="456dp"
-                        android:layout_marginStart="192dp"
+                        android:layout_marginStart="208dp"
                         android:src="@drawable/p_insideout_19751_af12286c"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -115,15 +129,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="1.0" />
 
-            <Button
-                android:id="@+id/button9"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="1150dp"
-                android:text="Button"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:layout_editor_absoluteX="273dp" />
-
             <HorizontalScrollView
                 android:layout_width="600dp"
                 android:layout_height="438dp"
@@ -132,12 +137,69 @@
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView"
-                app:layout_constraintVertical_bias="0.385">
+                app:layout_constraintVertical_bias="0.300">
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical" />
+                    android:layout_height="match_parent">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/imgVenomLetThereBeCarnage"
+                        android:layout_width="362dp"
+                        android:layout_height="397dp"
+                        android:src="@drawable/venom2"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imgVenom"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.426"
+                        app:shapeAppearanceOverlay="@style/redondeado"/>
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/imgVenom"
+                        android:layout_width="319dp"
+                        android:layout_height="383dp"
+                        android:layout_marginStart="30dp"
+                        android:src="@drawable/venom"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imgAcrossTheSpiderverse"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.29"
+                        app:shapeAppearanceOverlay="@style/redondeado"/>
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/imgAcrossTheSpiderverse"
+                        android:layout_width="278dp"
+                        android:layout_height="385dp"
+                        android:layout_marginStart="8dp"
+                        android:src="@drawable/spidermanacrossthespidervese"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imgIntoTheSpiderverse"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.301"
+                        app:shapeAppearanceOverlay="@style/redondeado"/>
+
+                    <Button
+                        android:id="@+id/button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="1500dp"
+                        android:layout_marginTop="16dp"
+                        android:text="Button"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/imgIntoTheSpiderverse"
+                        android:layout_width="303dp"
+                        android:layout_height="369dp"
+                        android:layout_marginStart="212dp"
+                        android:src="@drawable/spidermanintothespiderverse"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.307"
+                        app:shapeAppearanceOverlay="@style/redondeado"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </HorizontalScrollView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
