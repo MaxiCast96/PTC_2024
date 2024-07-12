@@ -17,6 +17,12 @@
         android:theme="@style/Theme.Material3.Dark"
         tools:targetApi="31">
         <activity
+            android:name=".activity_login"
+            android:exported="false" />
+        <activity
+            android:name=".detalle_horarios"
+            android:exported="false" />
+        <activity
             android:name=".item_card_detalle_horario"
             android:exported="false" />
         <activity
@@ -32,7 +38,7 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".activity_login"
+            android:name=".activity_seleccion_asientos"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
