@@ -3,6 +3,7 @@ package ptc.proyecto.estrella.bella
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -42,6 +43,9 @@ class activity_login : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        val txtCorreo: EditText = findViewById(R.id.txtCorreo)
+
         var btn_login = findViewById<Button>(R.id.btn_login)
         btn_login.setOnClickListener(){
             val intent = Intent(this, MainActivity::class.java)
@@ -50,6 +54,7 @@ class activity_login : AppCompatActivity() {
 
         var btnCrearCuenta = findViewById<Button>(R.id.btnCrearCuenta)
         btnCrearCuenta.setOnClickListener(){
+
             val intent = Intent(this, activity_signup::class.java)
             startActivity(intent)
         }
