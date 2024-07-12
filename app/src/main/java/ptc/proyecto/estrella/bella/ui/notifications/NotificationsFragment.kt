@@ -88,7 +88,7 @@ class NotificationsFragment : Fragment() {
             }
             builder.show()
         }
-
+        
         return root
     }
 
