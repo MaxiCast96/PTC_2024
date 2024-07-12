@@ -11,7 +11,11 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import ptc.proyecto.estrella.bella.ui.enviarCorreo
 
 class activity_correo : AppCompatActivity() {
 
@@ -28,7 +32,16 @@ class activity_correo : AppCompatActivity() {
         val btnEnviarCodigo: Button = findViewById(R.id.btnEnviarCodigo)
         btnEnviarCodigo.setOnClickListener {
             if (validarCorreo()) {
-                animCorreo.playAnimation()
+                //animCorreo.playAnimation()
+                CoroutineScope(Dispatchers.Main).launch {
+                    val codigoAleatorio = (100000..999999).random()
+
+                    enviarCorreo(
+                        "guishe64dice@gmail.com",
+                        "Recuperación de contraseña",
+                        "Este es tu codigo de recuperación: $codigoAleatorio"
+                    )
+                }
                 val intent = Intent(this, activity_codigo::class.java)
                 startActivity(intent)
             } else {
