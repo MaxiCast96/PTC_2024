@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -49,13 +50,18 @@ class NotificationsFragment : Fragment() {
         val lblName = root.findViewById<TextView>(R.id.lblNombre)
         val lblEmail = root.findViewById<TextView>(R.id.lblEmail)
 
-        //Obtener Nombre y Correo
+        //ImageView
+        val imgProfile = root.findViewById<ImageView>(R.id.imgProfilePicture)
+
+        //Obtener Nombre, Correo y Foto de Perfil
         val nameReceived = arguments?.getString("nombre")
         val emailReceived = arguments?.getString("email")
+        val pfpReceived = arguments?.getString("foto_perfil")
 
         //Mostrar Nombre y Correo
         lblName.text = nameReceived
         lblEmail.text = emailReceived
+        // TODO:  imgProfile.setImageBitmap(pfpReceived) 
 
         //Editar Nombre
         btnEditName.setOnClickListener {
@@ -76,6 +82,26 @@ class NotificationsFragment : Fragment() {
             builder.show()
         }
 
+        fun obtenerDatos(): List<listaUsuarios> {
+            val objConnection = ClaseConexion().cadenaConexion()
+
+            // Query Setup
+            val statement = objConnection?.createStatement()
+            val resultSet = statement?.executeQuery("select * from Usuario")!!
+
+            val listadoProductos = mutableListOf<listaUsuarios>()
+            while (resultSet.next()) {
+                val uuid = resultSet.getString("uuid")
+                val nombre = resultSet.getString("nombre")
+                val email = resultSet.getString("email")
+                val password = resultSet.getString("contraseña")
+                val roleId = resultSet.getInt("rol_id")
+                val profilePic = resultSet.getString("foto_perfil")
+                val user = listaUsuarios(uuid, nombre, email, password, roleId, profilePic)
+                listadoProductos.add(user)
+            }
+            return listadoProductos
+        }
 
 
         return root
