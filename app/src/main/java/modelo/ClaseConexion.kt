@@ -34,7 +34,6 @@ class ClaseConexion {
             //val Rene = DriverManager.getConnection("", "", "")
             //val LaboratorioRene = DriverManager.getConnection("", "", "")
 
-            val default = "PON TU PROPIO RETURN"
             return default
 
         }catch (e: Exception){

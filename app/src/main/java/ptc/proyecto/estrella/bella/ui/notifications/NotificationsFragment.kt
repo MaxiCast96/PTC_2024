@@ -43,20 +43,7 @@ class NotificationsFragment : Fragment() {
         val btnEditName = root.findViewById<Button>(R.id.btnEditName)
         val btnEditPayment = root.findViewById<Button>(R.id.btnDetalleFacturaEdit)
 
-        TODO("ARREGLAR ESTA MADRE")
-        /*btnEditUser.setOnClickListener{
-            //Edit User
-            val context = this.context
 
-            val builder = AlertDialog.Builder(context)
-            builder.setTitle("Editar Usuario")
-
-            val textBox = EditText(context)
-            textBox.setHint(listaUsuarios.nombre)
-
-        }
-        
-         */
         return root
     }
 
