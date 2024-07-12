@@ -70,25 +70,18 @@ class NotificationsFragment : Fragment() {
         btnEditName.setOnClickListener {
             //Editar Nombre
             val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle("Editar Usuario")
-
             //Textbox
-            val textBox = EditText(context)
             textBox.setHint("Nombre")
             builder.setView(textBox)
 
             //Botones
-            builder.setPositiveButton("Guardar"){
-                    dialog, wich ->
+            builder.setPositiveButton("Guardar") { dialog, wich ->
                 println("NO TERMINADO")
             }
-
-            builder.setNegativeButton("Cancelar"){
-                    dialog, wich ->
+            builder.setNegativeButton("Cancelar") { dialog, wich ->
                 dialog.dismiss()
             }
             builder.show()
-        }
         
         return root
     }
