@@ -1,11 +1,13 @@
 package ptc.proyecto.estrella.bella.ui.notifications
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -39,34 +41,29 @@ class NotificationsFragment : Fragment() {
         _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val btnEditUser = root.findViewById<Button>(R.id.btnEditUser)
+        //Botones
         val btnEditName = root.findViewById<Button>(R.id.btnEditName)
         val btnEditPayment = root.findViewById<Button>(R.id.btnDetalleFacturaEdit)
+        val btnLogout = root.findViewById<Button>(R.id.btnLogout)
 
+        //Labels
+        val lblName = root.findViewById<TextView>(R.id.lblNombre)
+        val lblEmail = root.findViewById<TextView>(R.id.lblEmail)
 
-        btnEditUser.setOnClickListener {
-            //Editar Usuario
-            val builder = AlertDialog.Builder(requireContext())
-            builder.setTitle("Editar Usuario")
+        //ImageView
+        val imgProfile = root.findViewById<ImageView>(R.id.imgProfilePicture)
 
-            //Textbox
-            val textBox = EditText(context)
-            textBox.setHint("Nombre")
-            builder.setView(textBox)
+        //Obtener Nombre, Correo y Foto de Perfil
+        val nameReceived = arguments?.getString("nombre")
+        val emailReceived = arguments?.getString("email")
+        val pfpReceived = arguments?.getString("foto_perfil")
 
-            //Botones
-            builder.setPositiveButton("Guardar"){
-                    dialog, wich ->
-                println("NO TERMINADO")
-            }
+        //Mostrar Nombre y Correo
+        lblName.text = nameReceived
+        lblEmail.text = emailReceived
+        // TODO:  imgProfile.setImageBitmap(pfpReceived)
 
-            builder.setNegativeButton("Cancelar"){
-                    dialog, wich ->
-                dialog.dismiss()
-            }
-            builder.show()
-        }
-
+        //Editar Nombre
         btnEditName.setOnClickListener {
             //Editar Nombre
             val builder = AlertDialog.Builder(requireContext())
@@ -84,6 +81,29 @@ class NotificationsFragment : Fragment() {
             }
             builder.show()
         }
+
+        fun obtenerDatos(): List<listaUsuarios> {
+            val objConnection = ClaseConexion().cadenaConexion()
+
+            // Query Setup
+            val statement = objConnection?.createStatement()
+            val resultSet = statement?.executeQuery("select * from Usuario")!!
+
+            val listadoProductos = mutableListOf<listaUsuarios>()
+            while (resultSet.next()) {
+                val uuid = resultSet.getString("uuid")
+                val nombre = resultSet.getString("nombre")
+                val email = resultSet.getString("email")
+                val password = resultSet.getString("contraseña")
+                val roleId = resultSet.getInt("rol_id")
+                val profilePic = resultSet.getString("foto_perfil")
+                val user = listaUsuarios(uuid, nombre, email, password, roleId, profilePic)
+                listadoProductos.add(user)
+            }
+            return listadoProductos
+        }
+
+
         return root
     }
 
