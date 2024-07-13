@@ -36,8 +36,11 @@ class ClaseConexion {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             return Aldo
 =======
+=======
+>>>>>>> main
 =======
 >>>>>>> main
             val default = Guillermo

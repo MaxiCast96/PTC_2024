@@ -19,6 +19,7 @@
         <activity
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             android:name=".activity_seleccion_asientos"
             android:exported="false" />
         <activity
@@ -30,6 +31,11 @@
         <activity
             android:name=".item_card_detalle_horario"
             android:exported="false" />
+=======
+            android:name=".activity_codigo"
+            android:exported="false"
+            android:theme="@style/Theme.Material3.Dark.NoActionBar"/>
+>>>>>>> main
 =======
             android:name=".activity_codigo"
             android:exported="false"
