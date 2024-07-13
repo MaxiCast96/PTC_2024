@@ -35,8 +35,11 @@ class ClaseConexion {
             //val LaboratorioRene = DriverManager.getConnection("", "", "")
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             return Aldo
 =======
+=======
+>>>>>>> main
             val default = Guillermo
             return default
 >>>>>>> main
