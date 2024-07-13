@@ -2,10 +2,10 @@ package ptc.proyecto.estrella.bella
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Patterns
 import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.findNavController
@@ -13,25 +13,20 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import ptc.proyecto.estrella.bella.databinding.ActivityMainBinding
 
 class activity_login : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val ScreenSplash = installSplashScreen()
-
-        ScreenSplash.setKeepOnScreenCondition{false}
-
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val navView: BottomNavigationView = binding.navView
-
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
@@ -39,7 +34,7 @@ class activity_login : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-        getSupportActionBar()?.hide()
+        supportActionBar?.hide()
         enableEdgeToEdge()
         setContentView(R.layout.activity_login)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -47,15 +42,48 @@ class activity_login : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        var btn_login = findViewById<Button>(R.id.btn_login)
-        btn_login.setOnClickListener(){
-            val intent = Intent(this, MainActivity::class.java)
+
+        val txtCorreo = findViewById<TextInputLayout>(R.id.txtCorreo)
+        val inputCorreo = txtCorreo.editText as TextInputEditText
+        val txtContraseña = findViewById<TextInputLayout>(R.id.txtContraseña)
+        val inputContraseña = txtContraseña.editText as TextInputEditText
+        val btn_login = findViewById<Button>(R.id.btn_login)
+
+        btn_login.setOnClickListener {
+            val correo = inputCorreo.text.toString()
+            val contraseña = inputContraseña.text.toString()
+
+            var valid = true
+
+            if (!Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
+                txtCorreo.error = "Correo no válido"
+                valid = false
+            } else {
+                txtCorreo.error = null
+            }
+
+            if (contraseña.length < 6) {
+                txtContraseña.error = "La contraseña debe tener al menos 6 caracteres"
+                valid = false
+            } else {
+                txtContraseña.error = null
+            }
+
+            if (valid) {
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+            }
+        }
+
+        val btnCrearCuenta = findViewById<Button>(R.id.btnCrearCuenta)
+        btnCrearCuenta.setOnClickListener {
+            val intent = Intent(this, activity_signup::class.java)
             startActivity(intent)
         }
 
-        var btnCrearCuenta = findViewById<Button>(R.id.btnCrearCuenta)
-        btnCrearCuenta.setOnClickListener(){
-            val intent = Intent(this, activity_signup::class.java)
+        val btnRecuContra: Button = findViewById(R.id.btnRecuContra)
+        btnRecuContra.setOnClickListener {
+            val intent = Intent(this, activity_correo::class.java)
             startActivity(intent)
         }
     }
