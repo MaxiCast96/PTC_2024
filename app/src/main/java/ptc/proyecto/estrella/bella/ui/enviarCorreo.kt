@@ -25,7 +25,7 @@ suspend fun enviarCorreo(receptor: String, asunto: String, mensaje: String) = wi
         override fun getPasswordAuthentication(): PasswordAuthentication {
             return PasswordAuthentication(
                 "cinemanow2024@gmail.com",
-                "nnevf gvhs odpv clwa"
+                "ynen gnki pkps bgqs"
             )
         }
     })
@@ -35,7 +35,7 @@ suspend fun enviarCorreo(receptor: String, asunto: String, mensaje: String) = wi
             setFrom(InternetAddress("cinemanow2024@gmail.com"))
             addRecipient(Message.RecipientType.TO, InternetAddress(receptor))
             subject = asunto
-            setText(mensaje)
+            setContent(mensaje, "text/html; charset=utf-8")
         }
         Transport.send(message)
         println("Correo enviado satisfactoriamente")
@@ -43,5 +43,55 @@ suspend fun enviarCorreo(receptor: String, asunto: String, mensaje: String) = wi
         e.printStackTrace()
         println("Correo no enviado, error: ${e.message}")
     }
+}
+
+fun crearMensajeHTML(codigo: Int): String {
+    return """
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style>
+                body {
+                    background-color: #1F1C4B;
+                    color: #FFFFFF;
+                    font-family: Arial, sans-serif;
+                    text-align: center;
+                    padding: 50px;
+                }
+                .container {
+                    background-color: #362F5C;
+                    border-radius: 10px;
+                    padding: 20px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                }
+                h1 {
+                    color: #6959BF;
+                }
+                .codigo {
+                    background-color: #6959BF;
+                    color: #FFFFFF;
+                    padding: 10px;
+                    border-radius: 5px;
+                    display: inline-block;
+                    font-size: 24px;
+                    margin-top: 20px;
+                }
+                .footer {
+                    margin-top: 30px;
+                    color: #F85D74;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>Recuperación de Contraseña</h1>
+                <p>¡Hola!</p>
+                <p>Este es tu código de recuperación:</p>
+                <div class="codigo">$codigo</div>
+                <p class="footer">Por favor, no compartas este código con nadie.</p>
+            </div>
+        </body>
+        </html>
+    """.trimIndent()
 }
 
