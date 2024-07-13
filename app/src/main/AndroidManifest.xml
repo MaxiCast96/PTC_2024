@@ -4,7 +4,6 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -17,9 +16,19 @@
         android:theme="@style/Theme.Material3.Dark"
         tools:targetApi="31">
         <activity
-            android:name=".activity_codigo"
-            android:exported="false"
-            android:theme="@style/Theme.Material3.Dark.NoActionBar"/>
+<<<<<<< HEAD
+            android:name=".DetallesActivity"/>
+        <activity
+            android:name=".activity_RepuperarContra"
+            android:exported="false" />
+        <activity
+            android:name=".activity_signup"
+=======
+            android:name=".CompraDetalles"
+            android:exported="false" />
+        <activity
+            android:name=".activity_detalles"
+            android:exported="false" />
         <activity
             android:name=".activity_signup"
             android:exported="false" />
@@ -28,6 +37,7 @@
             android:exported="false" />
         <activity
             android:name=".activity_correo"
+>>>>>>> b2782e378adbd1c122360096f2bac3ca9c5c8fae
             android:exported="false" />
         <activity
             android:name=".MainActivity"
