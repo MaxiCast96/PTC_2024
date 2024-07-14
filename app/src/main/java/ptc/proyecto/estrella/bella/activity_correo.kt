@@ -48,6 +48,7 @@ class activity_correo : AppCompatActivity() {
                     }
                     val intent = Intent(this@activity_correo, activity_codigo::class.java)
                     intent.putExtra("codigo_recuperacion", codigoAleatorio)
+                    intent.putExtra("correo_usuario", correoUsuario)
                     startActivity(intent)
                 }
             } else {

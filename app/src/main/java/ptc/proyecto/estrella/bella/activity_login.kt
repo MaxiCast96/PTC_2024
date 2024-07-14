@@ -16,6 +16,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import ptc.proyecto.estrella.bella.databinding.ActivityMainBinding
+import modelo.ClaseConexion
+import java.security.MessageDigest
+import java.sql.Connection
+import java.sql.PreparedStatement
+import java.sql.ResultSet
 
 class activity_login : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -70,8 +75,12 @@ class activity_login : AppCompatActivity() {
             }
 
             if (valid) {
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
+                if (verificarCredenciales(correo, contraseña)) {
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                } else {
+                    txtContraseña.error = "Correo o contraseña incorrectos"
+                }
             }
         }
 
@@ -86,5 +95,44 @@ class activity_login : AppCompatActivity() {
             val intent = Intent(this, activity_correo::class.java)
             startActivity(intent)
         }
+    }
+
+    private fun verificarCredenciales(correo: String, contraseña: String): Boolean {
+        var connection: Connection? = null
+        var preparedStatement: PreparedStatement? = null
+        var resultSet: ResultSet? = null
+        var isValid = false
+
+        try {
+            connection = ClaseConexion().cadenaConexion()
+            if (connection != null) {
+                val query = "SELECT * FROM Usuarios WHERE email = ?"
+                preparedStatement = connection.prepareStatement(query)
+                preparedStatement.setString(1, correo)
+                resultSet = preparedStatement.executeQuery()
+
+                if (resultSet.next()) {
+                    val contraseñaAlmacenada = resultSet.getString("contraseña")
+                    val contraseñaIngresadaEncriptada = encriptarSHA256(contraseña)
+                    if (contraseñaAlmacenada == contraseñaIngresadaEncriptada) {
+                        isValid = true
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            resultSet?.close()
+            preparedStatement?.close()
+            connection?.close()
+        }
+
+        return isValid
+    }
+
+    private fun encriptarSHA256(texto: String): String {
+        val md = MessageDigest.getInstance("SHA-256")
+        val hash = md.digest(texto.toByteArray())
+        return hash.joinToString("") { "%02x".format(it) }
     }
 }
