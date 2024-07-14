@@ -12,17 +12,22 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import ptc.proyecto.estrella.bella.databinding.ActivityMainBinding
+import modelo.ClaseConexion
+import java.sql.Connection
+import java.sql.PreparedStatement
 
 class activity_RepuperarContra : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var correoUsuario: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        correoUsuario = intent.getStringExtra("correo_usuario").orEmpty()
 
         val navView: BottomNavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
@@ -51,6 +56,7 @@ class activity_RepuperarContra : AppCompatActivity() {
             val confirmarContraseña = txtRecuperarNuevaContraseña.editText?.text.toString()
 
             if (validarContraseñas(nuevaContraseña, confirmarContraseña, txtNuevaContraseña, txtRecuperarNuevaContraseña)) {
+                actualizarContraseñaEnBaseDeDatos(correoUsuario, nuevaContraseña)
                 val intent = Intent(this, activity_login::class.java)
                 startActivity(intent)
             }
@@ -86,5 +92,24 @@ class activity_RepuperarContra : AppCompatActivity() {
         }
 
         return isValid
+    }
+
+    private fun actualizarContraseñaEnBaseDeDatos(correo: String, nuevaContraseña: String) {
+        try {
+            val conexion: Connection? = ClaseConexion().cadenaConexion()
+            if (conexion != null) {
+                val query = "UPDATE usuarios SET contraseña = ? WHERE correo = ?"
+                val preparedStatement: PreparedStatement = conexion.prepareStatement(query)
+                preparedStatement.setString(1, nuevaContraseña)
+                preparedStatement.setString(2, correo)
+                preparedStatement.executeUpdate()
+                preparedStatement.close()
+                conexion.close()
+            } else {
+                println("No se pudo establecer conexión con la base de datos.")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }

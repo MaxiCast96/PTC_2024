@@ -4,6 +4,10 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+
 
     <application
         android:allowBackup="true"
@@ -15,15 +19,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Material3.Dark"
         tools:targetApi="31">
+
         <activity
-<<<<<<< HEAD
-            android:name=".DetallesActivity"/>
+            android:name=".activity_codigo"
+            android:exported="false"
+            android:theme="@style/Theme.Material3.Dark.NoActionBar"/>
         <activity
-            android:name=".activity_RepuperarContra"
-            android:exported="false" />
+            android:name=".DetallesActivity" />
         <activity
-            android:name=".activity_signup"
-=======
             android:name=".CompraDetalles"
             android:exported="false" />
         <activity
@@ -37,7 +40,6 @@
             android:exported="false" />
         <activity
             android:name=".activity_correo"
->>>>>>> b2782e378adbd1c122360096f2bac3ca9c5c8fae
             android:exported="false" />
         <activity
             android:name=".MainActivity"
@@ -47,7 +49,6 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

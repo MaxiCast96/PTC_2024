@@ -1,20 +1,25 @@
 package ptc.proyecto.estrella.bella
 
+import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Patterns
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.storage.FirebaseStorage
 import modelo.ClaseConexion
 import modelo.listaUsuarios
+import java.security.MessageDigest
 import java.sql.Connection
-import java.sql.DriverManager
 import java.sql.PreparedStatement
 import java.util.UUID
 import kotlin.concurrent.thread
@@ -26,6 +31,15 @@ class activity_signup : AppCompatActivity() {
     private lateinit var txtCorreo: TextInputLayout
     private lateinit var txtContraseña: TextInputLayout
     private lateinit var txtConfirmarContraseña: TextInputLayout
+    private var imageUri: Uri? = null
+
+    private val getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK && result.data != null) {
+            imageUri = result.data?.data
+            animFoto.setAnimation("newphoto")
+            animFoto.playAnimation()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,13 +55,12 @@ class activity_signup : AppCompatActivity() {
         val btn_login: Button = findViewById(R.id.btn_login)
 
         animFoto.setOnClickListener {
-            animFoto.playAnimation()
-            // Aquí podría ir la lógica para elegir una imagen de la galería
+            openGallery()
         }
 
         btnCrearCuenta.setOnClickListener {
             if (validarFormulario()) {
-                crearCuenta()
+                subirImagenYCrearCuenta()
             }
         }
 
@@ -63,6 +76,11 @@ class activity_signup : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
+
+    private fun openGallery() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        getResult.launch(intent)
     }
 
     private fun validarFormulario(): Boolean {
@@ -111,15 +129,34 @@ class activity_signup : AppCompatActivity() {
         return true
     }
 
-    private fun crearCuenta() {
+    private fun subirImagenYCrearCuenta() {
+        if (imageUri != null) {
+            val storageRef = FirebaseStorage.getInstance().reference
+            val fileRef = storageRef.child("perfil/${UUID.randomUUID()}.jpg")
+            val uploadTask = fileRef.putFile(imageUri!!)
+
+            uploadTask.addOnSuccessListener {
+                fileRef.downloadUrl.addOnSuccessListener { uri ->
+                    val fotoPerfil = uri.toString()
+                    crearCuenta(fotoPerfil)
+                }
+            }.addOnFailureListener {
+                Toast.makeText(this, "Error al subir la imagen", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            crearCuenta("https://static-00.iconduck.com/assets.00/profile-default-icon-512x511-v4sw4m29.png")
+        }
+    }
+
+    private fun crearCuenta(fotoPerfil: String) {
         val nombre = txtNombre.editText?.text.toString().trim()
         val correo = txtCorreo.editText?.text.toString().trim()
         val contraseña = txtContraseña.editText?.text.toString().trim()
-        val fotoPerfil = "https://static-00.iconduck.com/assets.00/profile-default-icon-512x511-v4sw4m29.png"
-        val rolId = 1
+        val contraseñaEncriptada = encriptarSHA256(contraseña)
+        val rolId = 2
         val uuid = UUID.randomUUID().toString()
 
-        val nuevoUsuario = listaUsuarios(uuid, nombre, correo, contraseña, rolId, fotoPerfil)
+        val nuevoUsuario = listaUsuarios(uuid, nombre, correo, contraseñaEncriptada, rolId, fotoPerfil)
 
         thread {
             val connection = obtenerConexionBD()
@@ -153,6 +190,12 @@ class activity_signup : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun encriptarSHA256(texto: String): String {
+        val md = MessageDigest.getInstance("SHA-256")
+        val hash = md.digest(texto.toByteArray())
+        return hash.joinToString("") { "%02x".format(it) }
     }
 
     private fun obtenerConexionBD(): Connection? {
