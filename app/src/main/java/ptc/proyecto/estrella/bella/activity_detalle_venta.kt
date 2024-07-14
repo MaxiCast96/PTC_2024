@@ -58,7 +58,7 @@ class activity_detalle_venta : AppCompatActivity() {
             runOnUiThread {
                 Toast.makeText(this, "Error de conexión a la base de datos: ${e.message}", Toast.LENGTH_LONG).show()
             }
-            return             emptyList()
+            return emptyList()
         }
     }
 
