@@ -15,6 +15,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.textfield.TextInputLayout
 import ptc.proyecto.estrella.bella.databinding.ActivityMainBinding
 import modelo.ClaseConexion
+import java.security.MessageDigest
 import java.sql.Connection
 import java.sql.PreparedStatement
 
@@ -56,7 +57,8 @@ class activity_RepuperarContra : AppCompatActivity() {
             val confirmarContraseña = txtRecuperarNuevaContraseña.editText?.text.toString()
 
             if (validarContraseñas(nuevaContraseña, confirmarContraseña, txtNuevaContraseña, txtRecuperarNuevaContraseña)) {
-                actualizarContraseñaEnBaseDeDatos(correoUsuario, nuevaContraseña)
+                val contraseñaEncriptada = encriptarSHA256(nuevaContraseña)
+                actualizarContraseñaEnBaseDeDatos(correoUsuario, contraseñaEncriptada)
                 val intent = Intent(this, activity_login::class.java)
                 startActivity(intent)
             }
@@ -92,6 +94,12 @@ class activity_RepuperarContra : AppCompatActivity() {
         }
 
         return isValid
+    }
+
+    private fun encriptarSHA256(input: String): String {
+        val digest = MessageDigest.getInstance("SHA-256")
+        val hashBytes = digest.digest(input.toByteArray(Charsets.UTF_8))
+        return hashBytes.joinToString("") { "%02x".format(it) }
     }
 
     private fun actualizarContraseñaEnBaseDeDatos(correo: String, nuevaContraseña: String) {
