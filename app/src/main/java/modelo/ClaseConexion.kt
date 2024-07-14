@@ -23,7 +23,7 @@ class ClaseConexion {
             val LaboratorioGuille = DriverManager.getConnection("jdbc:oracle:thin:@192.168.1.17:1521:xe","GUILLE_PTC","holacanola123")
 
             //Luis
-            //val Luis = DriverManager.getConnection("", "", "")
+            val Luis = DriverManager.getConnection("jdbc:oracle:thin:@192.168.0.9:1521:xe", "FERNANDO", "Kurama2005")
             //val LaboratorioLuis = DriverManager.getConnection("", "", "")
 
             //Lima
