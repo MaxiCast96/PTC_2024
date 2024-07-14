@@ -117,18 +117,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:fontFamily="@font/montserrat_medium"
         android:inputType="text"
         android:text="Name"
-        tools:layout_editor_absoluteX="138dp"
-        tools:layout_editor_absoluteY="228dp" />
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.696"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.358" />
 
     <EditText
         android:id="@+id/txtFechaCaducidad"
         android:layout_width="151dp"
         android:layout_height="45dp"
         android:ems="10"
+        android:fontFamily="@font/montserrat_medium"
         android:inputType="text"
         android:text="Name"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/txtvCodigoPostal"
         app:layout_constraintEnd_toStartOf="@+id/txtCVV"
         app:layout_constraintStart_toStartOf="parent"
@@ -141,8 +149,10 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="24dp"
         android:ems="10"
+        android:fontFamily="@font/montserrat_medium"
         android:inputType="text"
         android:text="Name"
+        android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtvCVV" />
 
@@ -152,8 +162,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="44dp"
         android:ems="10"
+        android:fontFamily="@font/montserrat_medium"
         android:inputType="text"
         android:text="Name"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.237"
@@ -168,7 +180,9 @@
         android:text="Pagar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtCodigoPostal" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.805" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

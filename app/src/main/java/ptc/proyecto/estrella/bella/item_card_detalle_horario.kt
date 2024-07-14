@@ -16,5 +16,8 @@ class item_card_detalle_horario : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+
+
     }
 }

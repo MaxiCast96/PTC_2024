@@ -58,7 +58,6 @@
                         android:layout_width="295dp"
                         android:layout_height="456dp"
                         android:layout_marginStart="208dp"
-                        android:src="@drawable/p_insideout_19751_af12286c"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:shapeAppearanceOverlay="@style/redondeado" />
@@ -68,7 +67,6 @@
                         android:layout_width="308dp"
                         android:layout_height="448dp"
                         android:layout_marginStart="40dp"
-                        android:src="@drawable/up"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imgIntensamente"
                         app:layout_constraintTop_toTopOf="parent"
@@ -80,7 +78,6 @@
                         android:layout_width="325dp"
                         android:layout_height="456dp"
                         android:layout_marginStart="40dp"
-                        android:src="@drawable/mariobros"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imgUp"
                         app:layout_constraintTop_toTopOf="parent"
@@ -92,7 +89,6 @@
                         android:layout_width="319dp"
                         android:layout_height="469dp"
                         android:layout_marginStart="8dp"
-                        android:src="@drawable/monstersinc"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imgMarioBros"
                         app:layout_constraintTop_toTopOf="parent"
@@ -147,12 +143,11 @@
                         android:id="@+id/imgVenomLetThereBeCarnage"
                         android:layout_width="362dp"
                         android:layout_height="397dp"
-                        android:src="@drawable/venom2"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imgVenom"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintVertical_bias="0.426"
-                        app:shapeAppearanceOverlay="@style/redondeado"/>
+                        app:shapeAppearanceOverlay="@style/redondeado" />
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/imgVenom"
@@ -171,12 +166,10 @@
                         android:layout_width="278dp"
                         android:layout_height="385dp"
                         android:layout_marginStart="8dp"
-                        android:src="@drawable/spidermanacrossthespidervese"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imgIntoTheSpiderverse"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.301"
-                        app:shapeAppearanceOverlay="@style/redondeado"/>
+                        app:layout_constraintVertical_bias="0.301" />
 
                     <Button
                         android:id="@+id/button"
@@ -193,12 +186,11 @@
                         android:layout_width="303dp"
                         android:layout_height="369dp"
                         android:layout_marginStart="212dp"
-                        android:src="@drawable/spidermanintothespiderverse"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintVertical_bias="0.307"
-                        app:shapeAppearanceOverlay="@style/redondeado"/>
+                        app:shapeAppearanceOverlay="@style/redondeado" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </HorizontalScrollView>
         </androidx.constraintlayout.widget.ConstraintLayout>

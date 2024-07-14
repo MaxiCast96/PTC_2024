@@ -10,15 +10,14 @@
     tools:context=".detalle_horarios">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/imgDetalleHorarios"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="152dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/avengersendgame" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -45,7 +44,7 @@
             android:textSize="24sp" />
 
         <Spinner
-            android:id="@+id/spinner4"
+            android:id="@+id/spDetalleHorario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -79,4 +78,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.02"
         app:srcCompat="@drawable/baseline_keyboard_arrow_left_24" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imgDetalleHorarios1"
+        android:layout_width="759dp"
+        android:layout_height="368dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:background="@color/black"
+        app:shapeAppearanceOverlay="@style/redondeado"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
