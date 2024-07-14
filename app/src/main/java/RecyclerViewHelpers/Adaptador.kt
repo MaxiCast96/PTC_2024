@@ -1,16 +1,16 @@
 package RecyclerViewHelpers
 
-import android.content.Intent
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.CoroutineScope
 import modelo.listaHistorial
 import ptc.proyecto.estrella.bella.R
-import ptc.proyecto.estrella.bella.activity_detalle_venta
 
 class Adaptador(
-    private var Datos: List<listaHistorial>)
+    private var Datos: List<listaHistorial>,
+    coroutineScope: CoroutineScope
+)
     : RecyclerView.Adapter<ViewHolder>(){
     fun actualizarRecyclerView(nuevaLista: List<listaHistorial>) {
         Datos = nuevaLista
@@ -21,6 +21,13 @@ class Adaptador(
         return ViewHolder(vista)
     }
 
+    override fun getItemCount(): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        TODO("Not yet implemented")
+    }
 
 
 }

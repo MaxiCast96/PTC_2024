@@ -30,7 +30,7 @@ class activity_detalle_venta : AppCompatActivity() {
         }
     }
 
-    private fun obtenerDatos(): List<ListaTickets> {
+    private fun obtenerDatos(): List<listaHistorial> {
         try {
             val objConexion = ClaseConexion().cadenaConexion()
             val statement = objConexion?.createStatement()
@@ -52,11 +52,11 @@ class activity_detalle_venta : AppCompatActivity() {
             statement?.close()
             objConexion?.close()
 
-            return listadoTickets
+            return listaHistorial
         } catch (e: SQLException) {
             e.printStackTrace()
             runOnUiThread {
-                Toast.makeText(this@MainActivity, "Error de conexión a la base de datos: ${e.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Error de conexión a la base de datos: ${e.message}", Toast.LENGTH_LONG).show()
             }
             return             emptyList()
         }
@@ -67,7 +67,7 @@ class activity_detalle_venta : AppCompatActivity() {
             val ejecutarFuncion = obtenerDatos()
 
             withContext(Dispatchers.Main) {
-                Adaptador = Adaptador(ejecutarFuncion, this)
+                val Adaptador = Adaptador(ejecutarFuncion, this)
                 findViewById<RecyclerView>(R.id.rcvHistorial).adapter = Adaptador
 
                 // Mostrar u ocultar el mensaje según si hay tickets o no
