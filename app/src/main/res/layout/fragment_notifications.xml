@@ -40,30 +40,6 @@
         app:layout_constraintVertical_bias="0.122" />
 
     <ImageView
-        android:id="@+id/imgEditButtonBG"
-        android:layout_width="65dp"
-        android:layout_height="65dp"
-        android:src="@drawable/edit_button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.702"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.27" />
-
-    <ImageView
-        android:id="@+id/imgEditButtonICO"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/edit"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.695"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.276" />
-
-    <ImageView
         android:id="@+id/imgLineSeparator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -107,19 +83,19 @@
         app:layout_constraintVertical_bias="0.437" />
 
     <Button
-        android:id="@+id/btnEditName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/btnEditAccount"
+        android:layout_width="105dp"
+        android:layout_height="58dp"
         android:backgroundTint="#F85D74"
         android:fontFamily="@font/montserrat_medium"
-        android:text="Editar"
+        android:text="Editar Cuenta"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.931"
+        app:layout_constraintHorizontal_bias="0.947"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.424" />
+        app:layout_constraintVertical_bias="0.277" />
 
     <TextView
         android:id="@+id/lblEmailLabel"

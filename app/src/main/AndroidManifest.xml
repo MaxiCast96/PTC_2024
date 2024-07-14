@@ -7,8 +7,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -19,13 +17,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Material3.Dark"
         tools:targetApi="31">
-
+        <activity
+            android:name=".edit_account_details"
+            android:exported="false" />
+        <activity
+            android:name=".ui.edit_account_info"
+            android:exported="false" />
         <activity
             android:name=".activity_codigo"
             android:exported="false"
-            android:theme="@style/Theme.Material3.Dark.NoActionBar"/>
-        <activity
-            android:name=".DetallesActivity" />
+            android:theme="@style/Theme.Material3.Dark.NoActionBar" />
+        <activity android:name=".DetallesActivity" />
         <activity
             android:name=".CompraDetalles"
             android:exported="false" />
@@ -49,6 +51,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
