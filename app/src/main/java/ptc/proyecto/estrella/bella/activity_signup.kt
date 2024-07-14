@@ -7,13 +7,13 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Patterns
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.storage.FirebaseStorage
 import modelo.ClaseConexion
@@ -26,7 +26,8 @@ import kotlin.concurrent.thread
 
 class activity_signup : AppCompatActivity() {
 
-    private lateinit var animFoto: LottieAnimationView
+    private lateinit var imgFoto: ImageView
+    private lateinit var imgCrearCuenta: ImageView
     private lateinit var txtNombre: TextInputLayout
     private lateinit var txtCorreo: TextInputLayout
     private lateinit var txtContraseña: TextInputLayout
@@ -36,8 +37,7 @@ class activity_signup : AppCompatActivity() {
     private val getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK && result.data != null) {
             imageUri = result.data?.data
-            animFoto.setAnimation("newphoto")
-            animFoto.playAnimation()
+            imgCrearCuenta.setImageURI(imageUri)
         }
     }
 
@@ -49,12 +49,13 @@ class activity_signup : AppCompatActivity() {
         txtCorreo = findViewById(R.id.txtCorreo)
         txtContraseña = findViewById(R.id.txtContraseña)
         txtConfirmarContraseña = findViewById(R.id.txtConfirmarContraseña)
-        animFoto = findViewById(R.id.AnimFoto)
+        imgFoto = findViewById(R.id.AnimFoto)
+        imgCrearCuenta = findViewById(R.id.AnimCrearCuenta)
 
         val btnCrearCuenta: Button = findViewById(R.id.btnCrearCuenta)
         val btn_login: Button = findViewById(R.id.btn_login)
 
-        animFoto.setOnClickListener {
+        imgFoto.setOnClickListener {
             openGallery()
         }
 
