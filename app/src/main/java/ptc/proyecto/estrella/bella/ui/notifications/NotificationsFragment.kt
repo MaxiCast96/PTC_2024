@@ -12,16 +12,19 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import modelo.ClaseConexion
 import modelo.listaUsuarios
 import ptc.proyecto.estrella.bella.R
 import ptc.proyecto.estrella.bella.databinding.FragmentNotificationsBinding
+import ptc.proyecto.estrella.bella.edit_account_details
+import java.sql.Connection
+import kotlin.concurrent.thread
 
-class NotificationsFragment : Fragment() {
+class NotificationsFragment(private var Datos: List<listaUsuarios>) : Fragment() {
 
     private var _binding: FragmentNotificationsBinding? = null
 
@@ -42,7 +45,7 @@ class NotificationsFragment : Fragment() {
         val root: View = binding.root
 
         //Botones
-        val btnEditName = root.findViewById<Button>(R.id.btnEditName)
+        val btnEditAccount = root.findViewById<Button>(R.id.btnEditAccount)
         val btnEditPayment = root.findViewById<Button>(R.id.btnDetalleFacturaEdit)
         val btnLogout = root.findViewById<Button>(R.id.btnLogout)
 
@@ -63,45 +66,37 @@ class NotificationsFragment : Fragment() {
         lblEmail.text = emailReceived
         // TODO:  imgProfile.setImageBitmap(pfpReceived)
 
-        //Editar Nombre
-        btnEditName.setOnClickListener {
-            //Editar Nombre
-            val builder = AlertDialog.Builder(requireContext())
-            //Textbox
-            val textBox = EditText(context)
-            textBox.setHint("Nombre")
-            builder.setView(textBox)
-
-            //Botones
-            builder.setPositiveButton("Guardar") { dialog, wich ->
-                println("NO TERMINADO")
-            }
-            builder.setNegativeButton("Cancelar") { dialog, wich ->
-                dialog.dismiss()
-            }
-            builder.show()
-        }
-
-        fun obtenerDatos(): List<listaUsuarios> {
+        fun getUser(): List<listaUsuarios>{
             val objConnection = ClaseConexion().cadenaConexion()
 
-            // Query Setup
+            //Query Setup
             val statement = objConnection?.createStatement()
-            val resultSet = statement?.executeQuery("select * from Usuario")!!
+            val resultSet = statement?.executeQuery("select * from tbProductosLima")!!
 
-            val listadoProductos = mutableListOf<listaUsuarios>()
-            while (resultSet.next()) {
+            val listadoUsuarios = mutableListOf<listaUsuarios>()
+            while (resultSet.next()){
                 val uuid = resultSet.getString("uuid")
-                val nombre = resultSet.getString("nombre")
+                val name = resultSet.getString("nombre")
                 val email = resultSet.getString("email")
                 val password = resultSet.getString("contraseña")
                 val roleId = resultSet.getInt("rol_id")
                 val profilePic = resultSet.getString("foto_perfil")
-                val user = listaUsuarios(uuid, nombre, email, password, roleId, profilePic)
-                listadoProductos.add(user)
+                val usuario = listaUsuarios(uuid, name, email, password, roleId, profilePic)
+                listadoUsuarios.add(usuario)
+
+
             }
-            return listadoProductos
+            return listadoUsuarios
         }
+        CoroutineScope(Dispatchers.IO).launch{
+            val executeFunction = getUser()
+
+            withContext(Dispatchers.Main){
+                val myAdapter = NotificationsFragment(executeFunction)
+                NotificationsFragment.adapter = myAdapter
+            }
+        }
+
 
 
         return root
@@ -110,5 +105,9 @@ class NotificationsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        lateinit var adapter: NotificationsFragment
     }
 }
