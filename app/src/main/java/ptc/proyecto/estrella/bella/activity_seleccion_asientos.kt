@@ -19,7 +19,14 @@ import modelo.listaAseintos
 import modelo.listaHorarioFunciones
 import modelo.listaSalas_PTC
 
+
 class activity_seleccion_asientos : AppCompatActivity() {
+
+    companion object VariablesGloables {
+        lateinit var fila: String
+        lateinit var numero: String
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -28,7 +35,11 @@ class activity_seleccion_asientos : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+
+
+
         }
+
 
 
 
@@ -64,7 +75,7 @@ class activity_seleccion_asientos : AppCompatActivity() {
 
             while (resultSet.next()){
                 val sala_id = resultSet.getInt("sala_id")
-                val nombre = resultSet.getString("hora")
+                val nombre = resultSet.getString("nombre")
                 val capacidad_asientos = resultSet.getInt("capacidad_asientos")
                 val unaSalaCompleta = listaSalas_PTC(sala_id, nombre, capacidad_asientos)
                 listaSalas.add(unaSalaCompleta)
@@ -97,25 +108,27 @@ class activity_seleccion_asientos : AppCompatActivity() {
             while (resultSet.next()){
                 val asiento_id = resultSet.getInt("asiento_id")
                 val sala_id = resultSet.getInt("sala_id")
-                val fila = resultSet.getString("fila")
-                val numero = resultSet.getInt("numero")
-                val unAsientoCompleto = listaAseintos(asiento_id, sala_id, fila, numero)
+                 fila = resultSet.getString("fila")
+                 numero = resultSet.getString("numero")
+                val unAsientoCompleto = listaAseintos(asiento_id, sala_id, fila, numero.toInt())
                 listaAsientos.add(unAsientoCompleto)
             }
             return listaAsientos
         }
 
+
         //Programar el spinner para que me muestre los datos del select
         CoroutineScope(Dispatchers.IO).launch {
             //1- Obtengo los datos
             val listaAsientos = obtenerlistaAseintos()
-            val fila = listaAsientos.map { it.fila }
-            val numero = listaAsientos.map { it.numero }
+
+            val Asiento = listaAsientos.map { "$it.fila  $it.numero" }
+
 
             withContext(Dispatchers.Main)  {
                 //2- Crear y modificar el adaptador
-                val miAdaptador = ArrayAdapter(this@activity_seleccion_asientos, android.R.layout.simple_spinner_dropdown_item, fila)
-                spSeleccionarSala.adapter = miAdaptador
+                val miAdaptador = ArrayAdapter(this@activity_seleccion_asientos, android.R.layout.simple_spinner_dropdown_item, Asiento)
+                spSeleccionarAsientos.adapter = miAdaptador
             }
         }
 

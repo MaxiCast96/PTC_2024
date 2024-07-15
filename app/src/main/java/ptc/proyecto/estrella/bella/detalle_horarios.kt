@@ -30,7 +30,7 @@ class detalle_horarios : AppCompatActivity() {
             insets
         }
 
-        val spSeleccionarSala = findViewById<Spinner>(R.id.spSeleccionarSala)
+        val spSeleccionarSala = findViewById<Spinner>(R.id.spDetalleHorario)
         val btnReservarEntradas = findViewById<Button>(R.id.btnReservarEntradas)
         val imgDetalleHorarios1 = findViewById<ImageView>(R.id.imgDetalleHorarios1)
         val imgAtras = findViewById<ImageView>(R.id.imgAtras)
@@ -63,7 +63,7 @@ class detalle_horarios : AppCompatActivity() {
 
             //Creo un Statement que me ejecutará el select
             val statement = objConexion?.createStatement()
-            val resultSet = statement?.executeQuery("select * from HorarioFuncion")!!
+            val resultSet = statement?.executeQuery("select * from Horario_Funcion")!!
 
             val listaHorarioFunciones= mutableListOf<listaHorarioFunciones>()
 
