@@ -1,80 +1,94 @@
 package ptc.proyecto.estrella.bella
 
-import RecyclerViewHelpers.Adaptador
 import android.os.Bundle
-import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import modelo.ClaseConexion
-import modelo.listaHistorial
+import ptc.proyecto.estrella.bella.R.*
 import java.sql.SQLException
 
 class activity_detalle_venta : AppCompatActivity() {
+
+    private lateinit var txtReserva: TextView
+    private lateinit var txtUsuario: TextView
+    private lateinit var txtFuncion: TextView
+    private lateinit var txtFechaReserva: TextView
+    private lateinit var txtPagoTotal: TextView
+    private lateinit var txtMetodoPago: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_detalle_venta)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+
+        txtReserva = findViewById(id.txtReservaId)
+        txtUsuario = findViewById(id.txtUsuarioId)
+        txtFuncion = findViewById(id.txtFuncionId)
+        txtFechaReserva = findViewById(id.txtFechaReserva)
+        txtPagoTotal = findViewById(id.txtTotalPago)
+        txtMetodoPago = findViewById(id.txtMetodoPago)
+
+        // Obtener el ID del ticket enviado desde MainActivity
+        val reserva_id = intent.getIntExtra("reserva_id", -1)
+        if (reserva_id == -1) {
+            // Manejar el caso donde no se recibe correctamente el ID del ticket
+            // Puedes mostrar un mensaje de error o regresar a la actividad anterior
+            finish()
+        } else {
+            // Obtener y mostrar la información del ticket desde la base de datos
+            obtenerInformacionHistorial(reserva_id)
         }
     }
 
-    private fun obtenerDatos(): List<listaHistorial> {
-        try {
-            val objConexion = ClaseConexion().cadenaConexion()
-            val statement = objConexion?.createStatement()
-            val resultSet = statement?.executeQuery("SELECT * FROM Reservas_PTC") ?: return emptyList()
 
-            val listaHistorial = mutableListOf<listaHistorial>()
 
-            while (resultSet.next()) {
-                val reserva = resultSet.getInt("reserva_id")
-                val usuario = resultSet.getInt("usuario_id")
-                val funcion = resultSet.getInt("funcion_id")
-                val fecha = resultSet.getInt("fecha_reserva")
-                val Total = resultSet.getInt("total_pago")
-                val metodoPago = resultSet.getInt("metodo_pago")
-                val historial = listaHistorial(reserva, usuario, funcion, fecha, Total, metodoPago)
-                listaHistorial.add(historial)
-            }
-            resultSet.close()
-            statement?.close()
-            objConexion?.close()
-
-            return listaHistorial
-        } catch (e: SQLException) {
-            e.printStackTrace()
-            runOnUiThread {
-                Toast.makeText(this, "Error de conexión a la base de datos: ${e.message}", Toast.LENGTH_LONG).show()
-            }
-            return emptyList()
-        }
-    }
-
-    private fun actualizarRecyclerView() {
+    private fun obtenerInformacionHistorial(reserva_id: Int) {
         CoroutineScope(Dispatchers.IO).launch {
-            val ejecutarFuncion = obtenerDatos()
+            try {
+                val objConexion = ClaseConexion().cadenaConexion()
+                val statement = objConexion?.createStatement()
+                val query = "SELECT * FROM Reservas_PTC WHERE reserva_id = $reserva_id"
+                val resultSet = statement?.executeQuery(query)
 
-            withContext(Dispatchers.Main) {
-                val Adaptador = Adaptador(ejecutarFuncion, this)
-                findViewById<RecyclerView>(R.id.rcvHistorial).adapter = Adaptador
+                // Verificar si se encontró el ticket
+                if (resultSet?.next() == true) {
+                    // Obtener los datos del ticket
+                    val Reserva = resultSet.getString("Reserva")
+                    val Usuario = resultSet.getString("Usuario")
+                    val Funcion = resultSet.getString("Funcion")
+                    val Fecha = resultSet.getString("Fecha")
+                    val PagoTotal = resultSet.getString("Pago_Total")
+                    val MetodoPago = resultSet.getString("Metodo_Pago")
 
-                // Mostrar u ocultar el mensaje según si hay tickets o no
-                if (ejecutarFuncion.isEmpty()) {
-                    findViewById<TextView>(R.id.textView3).visibility = View.VISIBLE
-                } else {
-                    findViewById<TextView>(R.id.textView3).visibility = View.GONE
+                    // Actualizar UI en el hilo principal
+                    withContext(Dispatchers.Main) {
+                        // Mostrar la información en los TextView con títulos
+                        txtReserva.text = "Reserva N: $reserva_id"
+                        txtUsuario.text = "Descripción del ticket: $Usuario"
+                        txtFuncion.text = "Autor: $Funcion"
+                        txtFechaReserva.text = "Autor: $Fecha"
+                        txtPagoTotal.text = "E-mail: $PagoTotal"
+                        txtMetodoPago.text = "Teléfono del Autor: $MetodoPago"
+                    }
+                }
+
+                // Cerrar conexiones
+                resultSet?.close()
+                statement?.close()
+                objConexion?.close()
+
+            } catch (e: SQLException) {
+                e.printStackTrace()
+                runOnUiThread() {
+                    // Manejar el error de conexión o consulta
+                    // Puedes mostrar un mensaje de error al usuario
+                    finish()
                 }
             }
         }
