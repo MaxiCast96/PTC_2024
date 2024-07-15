@@ -29,9 +29,6 @@
             android:theme="@style/Theme.Material3.Dark.NoActionBar" />
         <activity android:name=".DetallesActivity" />
         <activity
-            android:name=".activity_detalles"
-            android:exported="false" />
-        <activity
             android:name=".activity_signup"
             android:exported="false" />
         <activity
