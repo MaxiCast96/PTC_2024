@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
 import android.widget.Button
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -15,6 +16,10 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ptc.proyecto.estrella.bella.databinding.ActivityMainBinding
 import modelo.ClaseConexion
 import java.security.MessageDigest
@@ -52,9 +57,9 @@ class activity_login : AppCompatActivity() {
         val inputCorreo = txtCorreo.editText as TextInputEditText
         val txtContraseña = findViewById<TextInputLayout>(R.id.txtContraseña)
         val inputContraseña = txtContraseña.editText as TextInputEditText
-        val btn_login = findViewById<Button>(R.id.btn_login)
+        val btnLogin = findViewById<Button>(R.id.btn_login)
 
-        btn_login.setOnClickListener {
+        btnLogin.setOnClickListener {
             val correo = inputCorreo.text.toString()
             val contraseña = inputContraseña.text.toString()
 
@@ -75,11 +80,16 @@ class activity_login : AppCompatActivity() {
             }
 
             if (valid) {
-                if (verificarCredenciales(correo, contraseña)) {
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
-                } else {
-                    txtContraseña.error = "Correo o contraseña incorrectos"
+                GlobalScope.launch(Dispatchers.Main) {
+                    val isValid = withContext(Dispatchers.IO) {
+                        verificarCredenciales(correo, contraseña)
+                    }
+                    if (isValid) {
+                        val intent = Intent(this@activity_login, MainActivity::class.java)
+                        startActivity(intent)
+                    } else {
+                        txtContraseña.error = "Correo o contraseña incorrectos"
+                    }
                 }
             }
         }

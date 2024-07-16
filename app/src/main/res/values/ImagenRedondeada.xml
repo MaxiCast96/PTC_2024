@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <style name="redondeado">
+        <item name="cornerSize">16.5%</item>
+    </style>
+</resources>

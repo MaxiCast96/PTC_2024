@@ -3,6 +3,7 @@ package ptc.proyecto.estrella.bella
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -13,6 +14,10 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ptc.proyecto.estrella.bella.databinding.ActivityMainBinding
 import modelo.ClaseConexion
 import java.security.MessageDigest
@@ -58,9 +63,18 @@ class activity_RepuperarContra : AppCompatActivity() {
 
             if (validarContraseñas(nuevaContraseña, confirmarContraseña, txtNuevaContraseña, txtRecuperarNuevaContraseña)) {
                 val contraseñaEncriptada = encriptarSHA256(nuevaContraseña)
-                actualizarContraseñaEnBaseDeDatos(correoUsuario, contraseñaEncriptada)
-                val intent = Intent(this, activity_login::class.java)
-                startActivity(intent)
+                GlobalScope.launch(Dispatchers.Main) {
+                    val result = withContext(Dispatchers.IO) {
+                        actualizarContraseñaEnBaseDeDatos(correoUsuario, contraseñaEncriptada)
+                    }
+                    if (result) {
+                        val intent = Intent(this@activity_RepuperarContra, activity_login::class.java)
+                        startActivity(intent)
+                    } else {
+                        // Manejar el error, por ejemplo, mostrando un mensaje al usuario
+                        Toast.makeText(this@activity_RepuperarContra, "Error al actualizar la contraseña", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
     }
@@ -102,22 +116,25 @@ class activity_RepuperarContra : AppCompatActivity() {
         return hashBytes.joinToString("") { "%02x".format(it) }
     }
 
-    private fun actualizarContraseñaEnBaseDeDatos(correo: String, nuevaContraseña: String) {
+    private fun actualizarContraseñaEnBaseDeDatos(correo: String, nuevaContraseña: String): Boolean {
+        var result = false
         try {
             val conexion: Connection? = ClaseConexion().cadenaConexion()
             if (conexion != null) {
-                val query = "UPDATE usuarios SET contraseña = ? WHERE correo = ?"
+                val query = "UPDATE usuarios SET contraseña = ? WHERE email = ?"
                 val preparedStatement: PreparedStatement = conexion.prepareStatement(query)
                 preparedStatement.setString(1, nuevaContraseña)
                 preparedStatement.setString(2, correo)
                 preparedStatement.executeUpdate()
                 preparedStatement.close()
                 conexion.close()
+                result = true
             } else {
                 println("No se pudo establecer conexión con la base de datos.")
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
+        return result
     }
 }
