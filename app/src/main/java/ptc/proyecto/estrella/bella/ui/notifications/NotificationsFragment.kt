@@ -108,7 +108,10 @@ class NotificationsFragment(private var Datos: List<listaUsuarios>) : Fragment()
         _binding = null
     }
 
+    /*
     companion object {
         lateinit var adapter: NotificationsFragment
     }
+    
+     */
 }
