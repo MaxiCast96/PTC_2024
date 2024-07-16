@@ -28,9 +28,6 @@ class activity_pago : AppCompatActivity() {
             startActivity(intent)
         }
 
-        btnPagar.setOnClickListener {
-            val intent = Intent(this, //Inserten aquí la actividad historial :: class.java)
-                startActivity(intent)
-        }
+
     }
 }
