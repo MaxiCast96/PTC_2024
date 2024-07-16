@@ -1,6 +1,9 @@
 package ptc.proyecto.estrella.bella
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -15,6 +18,19 @@ class activity_pago : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        val imgAtrasPago = findViewById<ImageView>(R.id.imgAtrasPago)
+        val btnPagar = findViewById<Button>(R.id.btnPagar)
+
+        imgAtrasPago.setOnClickListener{
+            val intent = Intent(this, activity_seleccion_asientos::class.java )
+            startActivity(intent)
+        }
+
+        btnPagar.setOnClickListener {
+            val intent = Intent(this, //Inserten aquí la actividad historial :: class.java)
+                startActivity(intent)
         }
     }
 }

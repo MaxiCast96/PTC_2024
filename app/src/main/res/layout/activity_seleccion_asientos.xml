@@ -110,14 +110,14 @@
 
     <ImageView
         android:id="@+id/imgAtrasSalas"
-        android:layout_width="65dp"
-        android:layout_height="74dp"
+        android:layout_width="40dp"
+        android:layout_height="36dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.953"
+        app:layout_constraintHorizontal_bias="0.041"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.024"
-        app:srcCompat="@drawable/baseline_keyboard_arrow_right_24" />
+        app:layout_constraintVertical_bias="0.039"
+        app:srcCompat="@drawable/baseline_keyboard_arrow_left_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
