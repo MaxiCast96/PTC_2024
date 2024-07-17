@@ -65,8 +65,7 @@ class NotificationsFragment(private var Datos: List<listaUsuarios>) : Fragment()
         lblName.text = nameReceived
         lblEmail.text = emailReceived
         // TODO:  imgProfile.setImageBitmap(pfpReceived)
-
-        /*fun getUser(): List<listaUsuarios>{
+        fun getUser(): List<listaUsuarios>{
             val objConnection = ClaseConexion().cadenaConexion()
 
             //Query Setup
@@ -92,12 +91,11 @@ class NotificationsFragment(private var Datos: List<listaUsuarios>) : Fragment()
             val executeFunction = getUser()
 
             withContext(Dispatchers.Main){
-                val myAdapter = NotificationsFragment(executeFunction)
-                NotificationsFragment.adapter = myAdapter
+
             }
         }
         
-         */
+
 
 
         return root

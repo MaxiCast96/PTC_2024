@@ -1,14 +1,17 @@
 package ptc.proyecto.estrella.bella
 
+import RecyclerViewHelpers.UserViewModel
 import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -29,17 +32,19 @@ import java.sql.ResultSet
 
 class activity_login : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Configuración de NavController y AppBar
         val navView: BottomNavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
+                R.id.navigation_home, R.id.navigation_dashboard, R.id.fragment_usuario
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -53,6 +58,7 @@ class activity_login : AppCompatActivity() {
             insets
         }
 
+        // Obtener referencias a los elementos de la UI
         val txtCorreo = findViewById<TextInputLayout>(R.id.txtCorreo)
         val inputCorreo = txtCorreo.editText as TextInputEditText
         val txtContraseña = findViewById<TextInputLayout>(R.id.txtContraseña)
@@ -81,10 +87,14 @@ class activity_login : AppCompatActivity() {
 
             if (valid) {
                 GlobalScope.launch(Dispatchers.Main) {
-                    val isValid = withContext(Dispatchers.IO) {
+                    val user = withContext(Dispatchers.IO) {
                         verificarCredenciales(correo, contraseña)
                     }
-                    if (isValid) {
+                    if (user != null) {
+                        userViewModel.setNombre(user.nombre)
+                        userViewModel.setEmail(user.email)
+                        userViewModel.setFotoPerfil(user.fotoPerfil.toString())
+
                         val intent = Intent(this@activity_login, MainActivity::class.java)
                         startActivity(intent)
                     } else {
@@ -107,11 +117,11 @@ class activity_login : AppCompatActivity() {
         }
     }
 
-    private fun verificarCredenciales(correo: String, contraseña: String): Boolean {
+    private fun verificarCredenciales(correo: String, contraseña: String): Usuario? {
         var connection: Connection? = null
         var preparedStatement: PreparedStatement? = null
         var resultSet: ResultSet? = null
-        var isValid = false
+        var user: Usuario? = null
 
         try {
             connection = ClaseConexion().cadenaConexion()
@@ -125,7 +135,9 @@ class activity_login : AppCompatActivity() {
                     val contraseñaAlmacenada = resultSet.getString("contraseña")
                     val contraseñaIngresadaEncriptada = encriptarSHA256(contraseña)
                     if (contraseñaAlmacenada == contraseñaIngresadaEncriptada) {
-                        isValid = true
+                        val nombre = resultSet.getString("nombre")
+                        val fotoPerfil = resultSet.getString("foto_perfil")
+                        user = Usuario(nombre, correo, contraseñaAlmacenada, fotoPerfil)
                     }
                 }
             }
@@ -137,7 +149,7 @@ class activity_login : AppCompatActivity() {
             connection?.close()
         }
 
-        return isValid
+        return user
     }
 
     private fun encriptarSHA256(texto: String): String {
@@ -146,3 +158,5 @@ class activity_login : AppCompatActivity() {
         return hash.joinToString("") { "%02x".format(it) }
     }
 }
+
+data class Usuario(val nombre: String, val email: String, val contraseña: String, val fotoPerfil: String?)

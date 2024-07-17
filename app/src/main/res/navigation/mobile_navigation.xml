@@ -16,7 +16,13 @@
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="ptc.proyecto.estrella.bella.ui.notifications.NotificationsFragment"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/fragment_usuario"
+        android:name="ptc.proyecto.estrella.bella.fragment_usuario"
+        android:label="fragment_usuario"
+        tools:layout="@layout/fragment_usuario" />
+    <fragment
+        android:id="@+id/fragment_historial"
+        android:name="ptc.proyecto.estrella.bella.fragment_historial"
+        android:label="fragment_historial"
+        tools:layout="@layout/fragment_historial" />
 </navigation>
