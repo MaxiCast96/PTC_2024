@@ -41,6 +41,9 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
+            android:name=".detalle_horarios"
+            android:exported="false" />
+        <activity
             android:name=".activity_login"
             android:exported="true" >
             <intent-filter>
