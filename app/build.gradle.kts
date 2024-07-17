@@ -41,6 +41,7 @@ android {
 
 dependencies {
 
+    implementation("com.google.android.material:material:1.12.0")
     implementation("com.airbnb.android:lottie:6.4.1")
     implementation("androidx.core:core-splashscreen:1.0.0")
     implementation("com.oracle.database.jdbc:ojdbc6:11.2.0.4")
@@ -64,5 +65,7 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+
 
 }
