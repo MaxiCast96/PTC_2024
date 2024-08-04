@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.util.Patterns
 import android.widget.Button
 import android.widget.ImageView
@@ -16,13 +17,16 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import modelo.ClaseConexion
 import modelo.listaUsuarios
 import java.security.MessageDigest
 import java.sql.Connection
 import java.sql.PreparedStatement
 import java.util.UUID
-import kotlin.concurrent.thread
 
 class activity_signup : AppCompatActivity() {
 
@@ -60,8 +64,14 @@ class activity_signup : AppCompatActivity() {
         }
 
         btnCrearCuenta.setOnClickListener {
+            Log.d("SignupActivity", "Botón crear cuenta presionado")
             if (validarFormulario()) {
-                subirImagenYCrearCuenta()
+                Log.d("SignupActivity", "Formulario válido")
+                GlobalScope.launch(Dispatchers.Main) {
+                    subirImagenYCrearCuenta()
+                }
+            } else {
+                Log.d("SignupActivity", "Formulario inválido")
             }
         }
 
@@ -130,26 +140,35 @@ class activity_signup : AppCompatActivity() {
         return true
     }
 
-    private fun subirImagenYCrearCuenta() {
+    private suspend fun subirImagenYCrearCuenta() {
         if (imageUri != null) {
             val storageRef = FirebaseStorage.getInstance().reference
             val fileRef = storageRef.child("perfil/${UUID.randomUUID()}.jpg")
-            val uploadTask = fileRef.putFile(imageUri!!)
+            val upload = fileRef.putFile(imageUri!!)
 
-            uploadTask.addOnSuccessListener {
+            upload.addOnSuccessListener {
                 fileRef.downloadUrl.addOnSuccessListener { uri ->
                     val fotoPerfil = uri.toString()
-                    crearCuenta(fotoPerfil)
+                    Log.d("SignupActivity", "Imagen subida exitosamente: $fotoPerfil")
+                    GlobalScope.launch(Dispatchers.IO) {
+                        crearCuenta(fotoPerfil)
+                    }
                 }
             }.addOnFailureListener {
-                Toast.makeText(this, "Error al subir la imagen", Toast.LENGTH_SHORT).show()
+                runOnUiThread {
+                    Toast.makeText(this, "Error al subir la imagen", Toast.LENGTH_SHORT).show()
+                    Log.e("SignupActivity", "Error al subir la imagen", it)
+                }
             }
         } else {
-            crearCuenta("https://static-00.iconduck.com/assets.00/profile-default-icon-512x511-v4sw4m29.png")
+            Log.d("SignupActivity", "No se seleccionó imagen, usando imagen por defecto")
+            GlobalScope.launch(Dispatchers.IO) {
+                crearCuenta("https://static-00.iconduck.com/assets.00/profile-default-icon-512x511-v4sw4m29.png")
+            }
         }
     }
 
-    private fun crearCuenta(fotoPerfil: String) {
+    private suspend fun crearCuenta(fotoPerfil: String) {
         val nombre = txtNombre.editText?.text.toString().trim()
         val correo = txtCorreo.editText?.text.toString().trim()
         val contraseña = txtContraseña.editText?.text.toString().trim()
@@ -159,36 +178,38 @@ class activity_signup : AppCompatActivity() {
 
         val nuevoUsuario = listaUsuarios(uuid, nombre, correo, contraseñaEncriptada, rolId, fotoPerfil)
 
-        thread {
-            val connection = obtenerConexionBD()
-            if (connection != null) {
-                val sql = "INSERT INTO Usuarios (usuario_id, nombre, email, contraseña, rol_id, foto_perfil) VALUES (?, ?, ?, ?, ?, ?)"
-                val statement: PreparedStatement = connection.prepareStatement(sql)
-                statement.setString(1, nuevoUsuario.uuid)
-                statement.setString(2, nuevoUsuario.nombre)
-                statement.setString(3, nuevoUsuario.email)
-                statement.setString(4, nuevoUsuario.contraseña)
-                statement.setInt(5, nuevoUsuario.rol_id)
-                statement.setString(6, nuevoUsuario.foto_perfil)
+        val connection = obtenerConexionBD()
+        if (connection != null) {
+            Log.d("SignupActivity", "Conexión a la base de datos exitosa")
+            val sql = "INSERT INTO Usuarios (usuario_id, nombre, email, contraseña, rol_id, foto_perfil) VALUES (?, ?, ?, ?, ?, ?)"
+            val statement: PreparedStatement = connection.prepareStatement(sql)
+            statement.setString(1, nuevoUsuario.uuid)
+            statement.setString(2, nuevoUsuario.nombre)
+            statement.setString(3, nuevoUsuario.email)
+            statement.setString(4, nuevoUsuario.contraseña)
+            statement.setInt(5, nuevoUsuario.rol_id)
+            statement.setString(6, nuevoUsuario.foto_perfil)
 
-                val result = statement.executeUpdate()
-                if (result > 0) {
-                    runOnUiThread {
-                        Toast.makeText(this, "Cuenta creada exitosamente", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this, activity_login::class.java)
-                        startActivity(intent)
-                    }
-                } else {
-                    runOnUiThread {
-                        Toast.makeText(this, "Error al crear la cuenta", Toast.LENGTH_SHORT).show()
-                    }
+            val result = statement.executeUpdate()
+            if (result > 0) {
+                Log.d("SignupActivity", "Cuenta creada exitosamente")
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@activity_signup, "Cuenta creada exitosamente", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this@activity_signup, activity_login::class.java)
+                    startActivity(intent)
                 }
-                statement.close()
-                connection.close()
             } else {
-                runOnUiThread {
-                    Toast.makeText(this, "Error al conectar con la base de datos", Toast.LENGTH_SHORT).show()
+                Log.e("SignupActivity", "Error al crear la cuenta")
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@activity_signup, "Error al crear la cuenta", Toast.LENGTH_SHORT).show()
                 }
+            }
+            statement.close()
+            connection.close()
+        } else {
+            Log.e("SignupActivity", "Error al conectar con la base de datos")
+            withContext(Dispatchers.Main) {
+                Toast.makeText(this@activity_signup, "Error al conectar con la base de datos", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -198,6 +219,7 @@ class activity_signup : AppCompatActivity() {
         val hash = md.digest(texto.toByteArray())
         return hash.joinToString("") { "%02x".format(it) }
     }
+}
 
     private fun obtenerConexionBD(): Connection? {
         return try {
@@ -205,7 +227,8 @@ class activity_signup : AppCompatActivity() {
             claseConexion.cadenaConexion()
         } catch (e: Exception) {
             e.printStackTrace()
+            Log.e("SignupActivity", "Error al obtener conexión a la base de datos", e)
             null
         }
     }
-}
+
