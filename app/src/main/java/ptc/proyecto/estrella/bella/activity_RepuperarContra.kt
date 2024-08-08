@@ -110,10 +110,10 @@ class activity_RepuperarContra : AppCompatActivity() {
         return isValid
     }
 
-    private fun encriptarSHA256(input: String): String {
-        val digest = MessageDigest.getInstance("SHA-256")
-        val hashBytes = digest.digest(input.toByteArray(Charsets.UTF_8))
-        return hashBytes.joinToString("") { "%02x".format(it) }
+    private fun encriptarSHA256(texto: String): String {
+        val md = MessageDigest.getInstance("SHA-256")
+        val hash = md.digest(texto.toByteArray())
+        return hash.joinToString("") { "%02x".format(it) }
     }
 
     private fun actualizarContraseñaEnBaseDeDatos(correo: String, nuevaContraseña: String): Boolean {
