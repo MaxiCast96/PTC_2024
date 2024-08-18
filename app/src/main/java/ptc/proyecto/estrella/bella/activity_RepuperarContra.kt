@@ -1,11 +1,15 @@
 package ptc.proyecto.estrella.bella
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.MotionEvent
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.findNavController
@@ -53,9 +57,25 @@ class activity_RepuperarContra : AppCompatActivity() {
             insets
         }
 
+        // Obtener referencias a los elementos de la UI
+
         val btnCambiarContraseña: Button = findViewById(R.id.btnCambiarContraseña)
         val txtNuevaContraseña = findViewById<TextInputLayout>(R.id.txtNuevaContraseña)
         val txtRecuperarNuevaContraseña = findViewById<TextInputLayout>(R.id.txtRecuperarNuevaContraseña)
+
+        //hacer que al tocar cualquier parte de la pantalla se deseleccionen los edit text
+        val rootLayout = findViewById<ConstraintLayout>(R.id.main)
+
+        rootLayout.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                currentFocus?.let { view ->
+                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(view.windowToken, 0)
+                    view.clearFocus()
+                }
+            }
+            false
+        }
 
         btnCambiarContraseña.setOnClickListener {
             val nuevaContraseña = txtNuevaContraseña.editText?.text.toString()
@@ -126,6 +146,11 @@ class activity_RepuperarContra : AppCompatActivity() {
                 preparedStatement.setString(1, nuevaContraseña)
                 preparedStatement.setString(2, correo)
                 preparedStatement.executeUpdate()
+
+                val commitQuery = "COMMIT"
+                val statement = conexion.createStatement()
+                statement.execute(commitQuery) // Ejecutar el commit
+
                 preparedStatement.close()
                 conexion.close()
                 result = true

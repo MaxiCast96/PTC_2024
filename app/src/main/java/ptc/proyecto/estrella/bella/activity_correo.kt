@@ -1,12 +1,19 @@
 package ptc.proyecto.estrella.bella
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.provider.ContactsContract.CommonDataKinds.Im
 import android.util.Log
 import android.util.Patterns
+import android.view.MotionEvent
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.airbnb.lottie.LottieAnimationView
@@ -28,15 +35,43 @@ class activity_correo : AppCompatActivity() {
     private lateinit var txtCorreoRecuperacion: TextInputLayout
     private lateinit var animCorreo: LottieAnimationView
 
+    override fun onBackPressed() {
+
+        super.onBackPressed()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_correo)
 
+        // Obtener referencias a los elementos de la UI
         txtCorreoRecuperacion = findViewById(R.id.txtCorreoRecuperacion)
         animCorreo = findViewById(R.id.AnimCorreo)
+        val imgGoBack = findViewById<ImageView>(R.id.imgGoBack)
         val btnEnviarCodigo: Button = findViewById(R.id.btnEnviarCodigo)
+        val AnimCarga = findViewById<ImageView>(R.id.AnimCarga)
+
+        //hacer que al tocar cualquier parte de la pantalla se deseleccionen los edit text
+        val rootLayout = findViewById<ConstraintLayout>(R.id.main)
+
+        rootLayout.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                currentFocus?.let { view ->
+                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(view.windowToken, 0)
+                    view.clearFocus()
+                }
+            }
+            false
+        }
+
+        imgGoBack.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
 
         btnEnviarCodigo.setOnClickListener {
+            btnEnviarCodigo.visibility = View.GONE
+            AnimCarga.visibility = View.VISIBLE
             if (validarCorreo()) {
                 val correoUsuario = txtCorreoRecuperacion.editText?.text.toString().trim()
                 CoroutineScope(Dispatchers.Main).launch {
@@ -61,12 +96,20 @@ class activity_correo : AppCompatActivity() {
                         intent.putExtra("codigo_recuperacion", codigoAleatorio)
                         intent.putExtra("correo_usuario", correoUsuario)
                         startActivity(intent)
+                        finish()
+                        imgGoBack.setOnClickListener {
+                            onBackPressedDispatcher.onBackPressed()
+                        }
                     } else {
                         txtCorreoRecuperacion.error = "Correo no encontrado"
+                        btnEnviarCodigo.visibility = View.VISIBLE
+                        AnimCarga.visibility = View.GONE
                     }
                 }
             } else {
                 txtCorreoRecuperacion.error = "Correo inválido"
+                btnEnviarCodigo.visibility = View.VISIBLE
+                AnimCarga.visibility = View.GONE
             }
         }
 
@@ -82,10 +125,18 @@ class activity_correo : AppCompatActivity() {
     private fun validarCorreo(): Boolean {
         val correo = txtCorreoRecuperacion.editText?.text.toString().trim()
         return if (correo.isEmpty()) {
+            val btnEnviarCodigo: Button = findViewById(R.id.btnEnviarCodigo)
+            val AnimCarga = findViewById<ImageView>(R.id.AnimCarga)
             txtCorreoRecuperacion.error = "El correo es obligatorio"
+            btnEnviarCodigo.visibility = View.VISIBLE
+            AnimCarga.visibility = View.GONE
             false
         } else if (!correo.contains('@') || !correo.contains('.')) {
-            txtCorreoRecuperacion.error = "El correo debe contener '@' y '.'"
+            val btnEnviarCodigo: Button = findViewById(R.id.btnEnviarCodigo)
+            val AnimCarga = findViewById<ImageView>(R.id.AnimCarga)
+            txtCorreoRecuperacion.error = "El correo no es valido"
+            btnEnviarCodigo.visibility = View.VISIBLE
+            AnimCarga.visibility = View.GONE
             false
         } else {
             true

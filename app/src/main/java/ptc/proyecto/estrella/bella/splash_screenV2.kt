@@ -10,6 +10,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
+import modelo.ClaseConexion
 
 class splash_screenV2 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,9 +26,18 @@ class splash_screenV2 : AppCompatActivity() {
         }
 
         GlobalScope.launch(Dispatchers.IO) {
-            delay(2000)
+            val conexion = withContext(Dispatchers.IO) {
+                withTimeoutOrNull(5000) { // Timeout de 5 segundos
+                    ClaseConexion().cadenaConexion()
+                }
+            }
 
-            val pantallaSiguiente = Intent(this@splash_screenV2, activity_login::class.java)
+            val pantallaSiguiente = if (conexion != null) {
+                Intent(this@splash_screenV2, activity_login::class.java)
+            } else {
+                Intent(this@splash_screenV2, activity_connection_error::class.java)
+            }
+
             startActivity(pantallaSiguiente)
             finish()
         }

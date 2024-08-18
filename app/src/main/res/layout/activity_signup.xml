@@ -176,22 +176,25 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.88" />
 
+
     <TextView
         android:id="@+id/textView6"
-        android:layout_width="199dp"
-        android:layout_height="44dp"
+        android:layout_width="229dp"
+        android:layout_height="57dp"
+        android:fontFamily="@font/montserrat_medium"
         android:text="Crear cuenta"
+        android:textColor="#F85D74"
         android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.549"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.05" />
 
-
     <ImageView
         android:id="@+id/AnimCrearCuenta"
-        app:srcCompat="@drawable/profile"
+        app:srcCompat="@drawable/user"
         android:layout_width="145dp"
         android:layout_height="127dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -213,5 +216,34 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.275"
         app:srcCompat="@drawable/ic_camera" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/AnimCarga"
+        android:layout_width="100dp"
+        android:layout_height="77dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.81"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/cargando">
+
+    </com.airbnb.lottie.LottieAnimationView>
+
+    <ImageView
+        android:id="@+id/imgGoBack"
+        android:layout_width="47dp"
+        android:layout_height="37dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.063"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.06"
+        app:srcCompat="@drawable/baseline_keyboard_arrow_left_24" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
