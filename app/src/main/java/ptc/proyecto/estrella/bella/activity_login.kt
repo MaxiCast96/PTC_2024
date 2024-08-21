@@ -1,20 +1,36 @@
 package ptc.proyecto.estrella.bella
 
+import RecyclerViewHelpers.UserViewModel
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Patterns
+import android.view.MotionEvent
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ptc.proyecto.estrella.bella.databinding.ActivityMainBinding
 import modelo.ClaseConexion
 import java.security.MessageDigest
@@ -24,17 +40,19 @@ import java.sql.ResultSet
 
 class activity_login : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Configuración de NavController y AppBar
         val navView: BottomNavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
+                R.id.navigation_home, R.id.navigation_dashboard, R.id.fragment_usuario
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -48,21 +66,68 @@ class activity_login : AppCompatActivity() {
             insets
         }
 
+        // Obtener referencias a los elementos de la UI
         val txtCorreo = findViewById<TextInputLayout>(R.id.txtCorreo)
         val inputCorreo = txtCorreo.editText as TextInputEditText
         val txtContraseña = findViewById<TextInputLayout>(R.id.txtContraseña)
         val inputContraseña = txtContraseña.editText as TextInputEditText
-        val btn_login = findViewById<Button>(R.id.btn_login)
+        val btnLogin = findViewById<Button>(R.id.btn_login)
+        val AnimCarga = findViewById<LottieAnimationView>(R.id.AnimCarga)
 
-        btn_login.setOnClickListener {
+        //hacer que al tocar cualquier parte de la pantalla se deseleccionen los edit text
+        val rootLayout = findViewById<ConstraintLayout>(R.id.main)
+
+        rootLayout.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                currentFocus?.let { view ->
+                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(view.windowToken, 0)
+                    view.clearFocus()
+                }
+            }
+            false
+        }
+
+        //Hacer que al escribir se quite el error de los edit text
+
+        inputCorreo.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                txtCorreo.error = null
+            }
+        })
+
+        inputContraseña.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                txtContraseña.error = null
+            }
+        })
+
+        btnLogin.setOnClickListener {
             val correo = inputCorreo.text.toString()
             val contraseña = inputContraseña.text.toString()
+
+            btnLogin.visibility = View.GONE
+            AnimCarga.visibility = View.VISIBLE
 
             var valid = true
 
             if (!Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
                 txtCorreo.error = "Correo no válido"
                 valid = false
+                btnLogin.visibility = View.VISIBLE
+                AnimCarga.visibility = View.GONE
             } else {
                 txtCorreo.error = null
             }
@@ -70,16 +135,30 @@ class activity_login : AppCompatActivity() {
             if (contraseña.length < 6) {
                 txtContraseña.error = "La contraseña debe tener al menos 6 caracteres"
                 valid = false
+                btnLogin.visibility = View.VISIBLE
+                AnimCarga.visibility = View.GONE
             } else {
                 txtContraseña.error = null
             }
 
             if (valid) {
-                if (verificarCredenciales(correo, contraseña)) {
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
-                } else {
-                    txtContraseña.error = "Correo o contraseña incorrectos"
+                GlobalScope.launch(Dispatchers.Main) {
+                    val user = withContext(Dispatchers.IO) {
+                        verificarCredenciales(correo, contraseña)
+                    }
+                    if (user != null) {
+                        userViewModel.setNombre(user.nombre)
+                        userViewModel.setEmail(user.email)
+                        userViewModel.setFotoPerfil(user.fotoPerfil.toString())
+
+                        val intent = Intent(this@activity_login, MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        txtContraseña.error = "Correo o contraseña incorrectos"
+                        btnLogin.visibility = View.VISIBLE
+                        AnimCarga.visibility = View.GONE
+                    }
                 }
             }
         }
@@ -97,11 +176,11 @@ class activity_login : AppCompatActivity() {
         }
     }
 
-    private fun verificarCredenciales(correo: String, contraseña: String): Boolean {
+    private fun verificarCredenciales(correo: String, contraseña: String): Usuario? {
         var connection: Connection? = null
         var preparedStatement: PreparedStatement? = null
         var resultSet: ResultSet? = null
-        var isValid = false
+        var user: Usuario? = null
 
         try {
             connection = ClaseConexion().cadenaConexion()
@@ -115,7 +194,9 @@ class activity_login : AppCompatActivity() {
                     val contraseñaAlmacenada = resultSet.getString("contraseña")
                     val contraseñaIngresadaEncriptada = encriptarSHA256(contraseña)
                     if (contraseñaAlmacenada == contraseñaIngresadaEncriptada) {
-                        isValid = true
+                        val nombre = resultSet.getString("nombre")
+                        val fotoPerfil = resultSet.getString("foto_perfil")
+                        user = Usuario(nombre, correo, contraseñaAlmacenada, fotoPerfil)
                     }
                 }
             }
@@ -127,7 +208,7 @@ class activity_login : AppCompatActivity() {
             connection?.close()
         }
 
-        return isValid
+        return user
     }
 
     private fun encriptarSHA256(texto: String): String {
@@ -136,3 +217,5 @@ class activity_login : AppCompatActivity() {
         return hash.joinToString("") { "%02x".format(it) }
     }
 }
+
+data class Usuario(val nombre: String, val email: String, val contraseña: String, val fotoPerfil: String?)

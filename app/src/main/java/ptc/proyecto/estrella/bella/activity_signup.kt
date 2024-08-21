@@ -1,20 +1,28 @@
 package ptc.proyecto.estrella.bella
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.util.Patterns
+import android.view.MotionEvent
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.Dispatchers
@@ -45,19 +53,99 @@ class activity_signup : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+
+        super.onBackPressed()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
 
+        // Obtener referencias a los elementos de la UI
         txtNombre = findViewById(R.id.txtNombre)
         txtCorreo = findViewById(R.id.txtCorreo)
         txtContraseña = findViewById(R.id.txtContraseña)
         txtConfirmarContraseña = findViewById(R.id.txtConfirmarContraseña)
         animFoto = findViewById(R.id.AnimFoto)
         animCrearCuenta = findViewById(R.id.AnimCrearCuenta)
+        val AnimCarga = findViewById<LottieAnimationView>(R.id.AnimCarga)
+        val imgGoBack = findViewById<ImageView>(R.id.imgGoBack)
 
         val btnCrearCuenta: Button = findViewById(R.id.btnCrearCuenta)
         val btn_login: Button = findViewById(R.id.btn_login)
+
+        //hacer que al tocar cualquier parte de la pantalla se deseleccionen los edit text
+        val rootLayout = findViewById<ConstraintLayout>(R.id.main)
+
+        rootLayout.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                currentFocus?.let { view ->
+                    val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(view.windowToken, 0)
+                    view.clearFocus()
+                }
+            }
+            false
+        }
+
+
+
+        val nombreEditText = txtNombre.editText
+        val correoEditText = txtCorreo.editText
+        val contraseñaEditText = txtContraseña.editText
+        val confirmarContraseñaEditText = txtConfirmarContraseña.editText
+        nombreEditText?.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                txtNombre.error = null
+            }
+        })
+
+        correoEditText?.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                txtCorreo.error = null
+            }
+        })
+
+        contraseñaEditText?.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                txtContraseña.error = null
+            }
+        })
+
+        confirmarContraseñaEditText?.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                txtConfirmarContraseña.error = null
+            }
+        })
+
+        imgGoBack.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
 
         animFoto.setOnClickListener {
             openGallery()
@@ -65,6 +153,8 @@ class activity_signup : AppCompatActivity() {
 
         btnCrearCuenta.setOnClickListener {
             Log.d("SignupActivity", "Botón crear cuenta presionado")
+            btnCrearCuenta.visibility = View.GONE
+            AnimCarga.visibility = View.VISIBLE
             if (validarFormulario()) {
                 Log.d("SignupActivity", "Formulario válido")
                 GlobalScope.launch(Dispatchers.Main) {
@@ -99,9 +189,13 @@ class activity_signup : AppCompatActivity() {
         val correo = txtCorreo.editText?.text.toString().trim()
         val contraseña = txtContraseña.editText?.text.toString().trim()
         val confirmarContraseña = txtConfirmarContraseña.editText?.text.toString().trim()
+        val btnCrearCuenta = findViewById<Button>(R.id.btnCrearCuenta)
+        val AnimCarga = findViewById<LottieAnimationView>(R.id.AnimCarga)
 
         if (nombre.isEmpty()) {
             txtNombre.error = "El nombre es obligatorio"
+            btnCrearCuenta.visibility = View.VISIBLE
+            AnimCarga.visibility = View.GONE
             return false
         } else {
             txtNombre.error = null
@@ -109,9 +203,13 @@ class activity_signup : AppCompatActivity() {
 
         if (correo.isEmpty()) {
             txtCorreo.error = "El correo es obligatorio"
+            btnCrearCuenta.visibility = View.VISIBLE
+            AnimCarga.visibility = View.GONE
             return false
         } else if (!Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
             txtCorreo.error = "El correo es invalido"
+            btnCrearCuenta.visibility = View.VISIBLE
+            AnimCarga.visibility = View.GONE
             return false
         } else {
             txtCorreo.error = null
@@ -119,9 +217,13 @@ class activity_signup : AppCompatActivity() {
 
         if (contraseña.isEmpty()) {
             txtContraseña.error = "La contraseña es obligatoria"
+            btnCrearCuenta.visibility = View.VISIBLE
+            AnimCarga.visibility = View.GONE
             return false
         } else if (contraseña.length < 6) {
             txtContraseña.error = "La contraseña debe tener al menos 6 caracteres"
+            btnCrearCuenta.visibility = View.VISIBLE
+            AnimCarga.visibility = View.GONE
             return false
         } else {
             txtContraseña.error = null
@@ -129,9 +231,13 @@ class activity_signup : AppCompatActivity() {
 
         if (confirmarContraseña.isEmpty()) {
             txtConfirmarContraseña.error = "Debes confirmar la contraseña"
+            btnCrearCuenta.visibility = View.VISIBLE
+            AnimCarga.visibility = View.GONE
             return false
         } else if (contraseña != confirmarContraseña) {
             txtConfirmarContraseña.error = "Las contraseñas no coinciden"
+            btnCrearCuenta.visibility = View.VISIBLE
+            AnimCarga.visibility = View.GONE
             return false
         } else {
             txtConfirmarContraseña.error = null
@@ -141,6 +247,8 @@ class activity_signup : AppCompatActivity() {
     }
 
     private suspend fun subirImagenYCrearCuenta() {
+        val btnCrearCuenta = findViewById<Button>(R.id.btnCrearCuenta)
+        val AnimCarga = findViewById<LottieAnimationView>(R.id.AnimCarga)
         if (imageUri != null) {
             val storageRef = FirebaseStorage.getInstance().reference
             val fileRef = storageRef.child("perfil/${UUID.randomUUID()}.jpg")
@@ -158,12 +266,14 @@ class activity_signup : AppCompatActivity() {
                 runOnUiThread {
                     Toast.makeText(this, "Error al subir la imagen", Toast.LENGTH_SHORT).show()
                     Log.e("SignupActivity", "Error al subir la imagen", it)
+                    btnCrearCuenta.visibility = View.VISIBLE
+                    AnimCarga.visibility = View.GONE
                 }
             }
         } else {
             Log.d("SignupActivity", "No se seleccionó imagen, usando imagen por defecto")
             GlobalScope.launch(Dispatchers.IO) {
-                crearCuenta("https://static-00.iconduck.com/assets.00/profile-default-icon-512x511-v4sw4m29.png")
+                crearCuenta("https://i.imgur.com/FvJsrt9.png")
             }
         }
     }
@@ -175,6 +285,8 @@ class activity_signup : AppCompatActivity() {
         val contraseñaEncriptada = encriptarSHA256(contraseña)
         val rolId = 2
         val uuid = UUID.randomUUID().toString()
+        val btnCrearCuenta = findViewById<Button>(R.id.btnCrearCuenta)
+        val AnimCarga = findViewById<LottieAnimationView>(R.id.AnimCarga)
 
         val nuevoUsuario = listaUsuarios(uuid, nombre, correo, contraseñaEncriptada, rolId, fotoPerfil)
 
@@ -200,6 +312,8 @@ class activity_signup : AppCompatActivity() {
                 }
             } else {
                 Log.e("SignupActivity", "Error al crear la cuenta")
+                btnCrearCuenta.visibility = View.VISIBLE
+                AnimCarga.visibility = View.GONE
                 withContext(Dispatchers.Main) {
                     Toast.makeText(this@activity_signup, "Error al crear la cuenta", Toast.LENGTH_SHORT).show()
                 }
@@ -208,7 +322,10 @@ class activity_signup : AppCompatActivity() {
             connection.close()
         } else {
             Log.e("SignupActivity", "Error al conectar con la base de datos")
+
             withContext(Dispatchers.Main) {
+                btnCrearCuenta.visibility = View.VISIBLE
+                AnimCarga.visibility = View.GONE
                 Toast.makeText(this@activity_signup, "Error al conectar con la base de datos", Toast.LENGTH_SHORT).show()
             }
         }

@@ -26,11 +26,20 @@ class activity_codigo : AppCompatActivity() {
 
         txtCodigo = findViewById(R.id.txtCodigo)
 
+        val btnReenviar = findViewById<Button>(R.id.btnReenviar)
+
         val btnCodigo: Button = findViewById(R.id.btnComprobarCodigo)
+
+        btnReenviar.setOnClickListener {
+            val intent = Intent(this, activity_correo::class.java)
+            startActivity(intent)
+            finish()
+        }
         btnCodigo.setOnClickListener {
             if (validarCodigo()) {
                 val intent = Intent(this, activity_RepuperarContra::class.java)
                 startActivity(intent)
+                finish()
             }
         }
     }

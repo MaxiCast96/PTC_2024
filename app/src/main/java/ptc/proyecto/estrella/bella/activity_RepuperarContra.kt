@@ -1,10 +1,15 @@
 package ptc.proyecto.estrella.bella
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.MotionEvent
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.findNavController
@@ -13,6 +18,10 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ptc.proyecto.estrella.bella.databinding.ActivityMainBinding
 import modelo.ClaseConexion
 import java.security.MessageDigest
@@ -34,7 +43,7 @@ class activity_RepuperarContra : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
+                R.id.navigation_home, R.id.navigation_dashboard, R.id.fragment_usuario
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -48,9 +57,25 @@ class activity_RepuperarContra : AppCompatActivity() {
             insets
         }
 
+        // Obtener referencias a los elementos de la UI
+
         val btnCambiarContraseña: Button = findViewById(R.id.btnCambiarContraseña)
         val txtNuevaContraseña = findViewById<TextInputLayout>(R.id.txtNuevaContraseña)
         val txtRecuperarNuevaContraseña = findViewById<TextInputLayout>(R.id.txtRecuperarNuevaContraseña)
+
+        //hacer que al tocar cualquier parte de la pantalla se deseleccionen los edit text
+        val rootLayout = findViewById<ConstraintLayout>(R.id.main)
+
+        rootLayout.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                currentFocus?.let { view ->
+                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(view.windowToken, 0)
+                    view.clearFocus()
+                }
+            }
+            false
+        }
 
         btnCambiarContraseña.setOnClickListener {
             val nuevaContraseña = txtNuevaContraseña.editText?.text.toString()
@@ -58,9 +83,18 @@ class activity_RepuperarContra : AppCompatActivity() {
 
             if (validarContraseñas(nuevaContraseña, confirmarContraseña, txtNuevaContraseña, txtRecuperarNuevaContraseña)) {
                 val contraseñaEncriptada = encriptarSHA256(nuevaContraseña)
-                actualizarContraseñaEnBaseDeDatos(correoUsuario, contraseñaEncriptada)
-                val intent = Intent(this, activity_login::class.java)
-                startActivity(intent)
+                GlobalScope.launch(Dispatchers.Main) {
+                    val result = withContext(Dispatchers.IO) {
+                        actualizarContraseñaEnBaseDeDatos(correoUsuario, contraseñaEncriptada)
+                    }
+                    if (result) {
+                        val intent = Intent(this@activity_RepuperarContra, activity_login::class.java)
+                        startActivity(intent)
+                    } else {
+                        // Manejar el error, por ejemplo, mostrando un mensaje al usuario
+                        Toast.makeText(this@activity_RepuperarContra, "Error al actualizar la contraseña", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
     }
@@ -96,28 +130,36 @@ class activity_RepuperarContra : AppCompatActivity() {
         return isValid
     }
 
-    private fun encriptarSHA256(input: String): String {
-        val digest = MessageDigest.getInstance("SHA-256")
-        val hashBytes = digest.digest(input.toByteArray(Charsets.UTF_8))
-        return hashBytes.joinToString("") { "%02x".format(it) }
+    private fun encriptarSHA256(texto: String): String {
+        val md = MessageDigest.getInstance("SHA-256")
+        val hash = md.digest(texto.toByteArray())
+        return hash.joinToString("") { "%02x".format(it) }
     }
 
-    private fun actualizarContraseñaEnBaseDeDatos(correo: String, nuevaContraseña: String) {
+    private fun actualizarContraseñaEnBaseDeDatos(correo: String, nuevaContraseña: String): Boolean {
+        var result = false
         try {
             val conexion: Connection? = ClaseConexion().cadenaConexion()
             if (conexion != null) {
-                val query = "UPDATE usuarios SET contraseña = ? WHERE correo = ?"
+                val query = "UPDATE usuarios SET contraseña = ? WHERE email = ?"
                 val preparedStatement: PreparedStatement = conexion.prepareStatement(query)
                 preparedStatement.setString(1, nuevaContraseña)
                 preparedStatement.setString(2, correo)
                 preparedStatement.executeUpdate()
+
+                val commitQuery = "COMMIT"
+                val statement = conexion.createStatement()
+                statement.execute(commitQuery) // Ejecutar el commit
+
                 preparedStatement.close()
                 conexion.close()
+                result = true
             } else {
                 println("No se pudo establecer conexión con la base de datos.")
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
+        return result
     }
 }

@@ -12,16 +12,25 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/square_appicon"
-        android:label="@string/app_name"
+        android:label="CinemaNow
+"
         android:roundIcon="@drawable/round_appicon"
         android:supportsRtl="true"
         android:theme="@style/Theme.Material3.Dark"
         tools:targetApi="31">
         <activity
-            android:name=".edit_account_details"
+            android:name=".activity_connection_error"
+            android:exported="false"
+            android:theme="@style/Theme.Material3.Dark.NoActionBar"
+        />
+        <activity
+            android:name=".activity_login"
             android:exported="false" />
         <activity
-            android:name=".ui.edit_account_info"
+            android:name=".activity_detalle_venta"
+            android:exported="false" />
+        <activity
+            android:name=".activity_historial"
             android:exported="false" />
         <activity
             android:name=".activity_codigo"
@@ -29,10 +38,10 @@
             android:theme="@style/Theme.Material3.Dark.NoActionBar" />
         <activity android:name=".DetallesActivity" />
         <activity
-            android:name=".CompraDetalles"
+            android:name=".activity_seleccion_asientos"
             android:exported="false" />
         <activity
-            android:name=".activity_detalles"
+            android:name=".activity_pago"
             android:exported="false" />
         <activity
             android:name=".activity_signup"
@@ -47,8 +56,21 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
-            android:name=".activity_login"
-            android:exported="true">
+            android:name=".detalle_horarios"
+            android:exported="false" />
+        <activity
+            android:name=".activity_item_card"
+            android:exported="false" />
+        <activity
+            android:name=".edit_account_details"
+            android:exported="false" />
+        <activity
+            android:name=".item_card_detalle_horario"
+            android:exported="false" />
+        <activity
+            android:name=".splash_screenV2"
+            android:exported="true"
+            android:theme="@style/Theme.Material3.Dark.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
