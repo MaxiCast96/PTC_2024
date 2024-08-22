@@ -3,6 +3,7 @@ package ptc.proyecto.estrella.bella
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -57,8 +58,7 @@ class activity_RepuperarContra : AppCompatActivity() {
             insets
         }
 
-        // Obtener referencias a los elementos de la UI
-
+        // Obtener referencias de la UI
         val btnCambiarContraseña: Button = findViewById(R.id.btnCambiarContraseña)
         val txtNuevaContraseña = findViewById<TextInputLayout>(R.id.txtNuevaContraseña)
         val txtRecuperarNuevaContraseña = findViewById<TextInputLayout>(R.id.txtRecuperarNuevaContraseña)
@@ -91,7 +91,6 @@ class activity_RepuperarContra : AppCompatActivity() {
                         val intent = Intent(this@activity_RepuperarContra, activity_login::class.java)
                         startActivity(intent)
                     } else {
-                        // Manejar el error, por ejemplo, mostrando un mensaje al usuario
                         Toast.makeText(this@activity_RepuperarContra, "Error al actualizar la contraseña", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -145,11 +144,12 @@ class activity_RepuperarContra : AppCompatActivity() {
                 val preparedStatement: PreparedStatement = conexion.prepareStatement(query)
                 preparedStatement.setString(1, nuevaContraseña)
                 preparedStatement.setString(2, correo)
+                Log.d("RecuperarContra","Este es el correo que usarè para cambiar la contra: $correo");
                 preparedStatement.executeUpdate()
 
                 val commitQuery = "COMMIT"
-                val statement = conexion.createStatement()
-                statement.execute(commitQuery) // Ejecutar el commit
+                val statement = conexion.prepareStatement(commitQuery)
+                statement.executeUpdate()
 
                 preparedStatement.close()
                 conexion.close()
