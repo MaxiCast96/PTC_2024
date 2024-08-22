@@ -82,14 +82,13 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imgDetalleHorarios1"
-        android:layout_width="759dp"
-        android:layout_height="368dp"
+        android:layout_width="337dp"
+        android:layout_height="370dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        tools:background="@color/black"
         app:shapeAppearanceOverlay="@style/redondeado"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

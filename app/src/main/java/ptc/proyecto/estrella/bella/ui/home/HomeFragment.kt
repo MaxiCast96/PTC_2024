@@ -24,6 +24,11 @@ import java.sql.SQLException
 
 class HomeFragment : Fragment() {
 
+    companion object varaiablesGlobales {
+        lateinit var imagenSeleccionada: String
+
+    }
+
     private var _binding: FragmentHomeBinding? = null
 
     // This property is only valid between onCreateView and
@@ -42,6 +47,9 @@ class HomeFragment : Fragment() {
         val root: View = binding.root
 
 //todo el codigo aqui
+
+        //Aquí podría ir una variable la cual a partir de la app de escritorio se muestren las películas
+        //disponibles con sus posters
 
         val imgIntensamente = root.findViewById<ImageView>(R.id.imgIntensamente)
         val imgUp = root.findViewById<ImageView>(R.id.imgUp)
@@ -69,72 +77,53 @@ class HomeFragment : Fragment() {
         val uriVenom = "https://firebasestorage.googleapis.com/v0/b/cinemanow-ptc-2024.appspot.com/o/posters%2Fvenom.jpg?alt=media&token=0ca19971-42b0-4f93-8e02-f09c889ba973"
         val uriAcrossTheSpiderverse = "https://firebasestorage.googleapis.com/v0/b/cinemanow-ptc-2024.appspot.com/o/posters%2Fspidermanacrossthespidervese.jpeg?alt=media&token=e87f94aa-3bb6-43b3-9393-80c75c2f2127"
         val uriIntoTheSpiderverse = "https://firebasestorage.googleapis.com/v0/b/cinemanow-ptc-2024.appspot.com/o/posters%2Fspidermanintothespiderverse.jpeg?alt=media&token=a8826668-6649-4126-9bf2-0b7cfc0a8e0e"
+
         imgIntensamente.setOnClickListener {
+            imagenSeleccionada = uriIntensamente
             val intent = Intent(requireContext(), detalle_horarios::class.java)
-            intent.putExtra(
-                "uriIntensamente",
-                uriIntensamente
-            )
             startActivity(intent)
         }
 
         imgUp.setOnClickListener {
+            imagenSeleccionada = uriUp
             val intent = Intent(requireContext(), detalle_horarios::class.java)
-            intent.putExtra(
-                "uriUp",
-                uriUp
-            )
             startActivity(intent)
         }
 
 
         imgMarioBros.setOnClickListener {
+            imagenSeleccionada = uriMarioBros
             val intent = Intent(requireContext(), detalle_horarios::class.java)
-            intent.putExtra(
-                "uriMarioBros",
-                uriMarioBros
-            )
             startActivity(intent)
         }
 
         imgMonsterInc.setOnClickListener {
+            imagenSeleccionada = uriMonsterInc
             val intent = Intent(requireContext(), detalle_horarios::class.java)
-            intent.putExtra("uriMonsterInc",
-                uriMonsterInc)
             startActivity(intent)
         }
 
         imgVenomLetThereBeCarnage.setOnClickListener {
+            imagenSeleccionada = uriVenomLetThereBeCarnage
             val intent = Intent(requireContext(), detalle_horarios::class.java)
-            intent.putExtra(
-                "uriVenomLetThereBeCarnage",
-                uriVenomLetThereBeCarnage
-            )
             startActivity(intent)
         }
 
         imgVenom.setOnClickListener {
+            imagenSeleccionada = uriVenom
             val intent = Intent(requireContext(), detalle_horarios::class.java)
-            intent.putExtra(
-                "uriVenom",
-                uriVenom
-            )
             startActivity(intent)
         }
 
         imgAcrossTheSpiderverse.setOnClickListener {
+            imagenSeleccionada = uriAcrossTheSpiderverse
             val intent = Intent(requireContext(), detalle_horarios::class.java)
-            intent.putExtra(
-                "uriAcrossTheSpiderVerse",
-                uriAcrossTheSpiderverse
-            )
             startActivity(intent)
         }
 
         imgIntoTheSpiderverse.setOnClickListener {
+            imagenSeleccionada = uriIntoTheSpiderverse
             val intent = Intent(requireContext(), detalle_horarios::class.java)
-            intent.putExtra("uriIntoTheSpiderVerse",
-            uriIntoTheSpiderverse)
             startActivity(intent)
         }
 

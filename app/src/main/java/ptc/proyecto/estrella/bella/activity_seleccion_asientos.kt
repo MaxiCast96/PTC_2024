@@ -122,12 +122,12 @@ class activity_seleccion_asientos : AppCompatActivity() {
             //1- Obtengo los datos
             val listaAsientos = obtenerlistaAseintos()
 
-            val Asiento = listaAsientos.map { "$it.fila  $it.numero" }
+            val Asientoss = listaAsientos.map { it.fila }
 
 
             withContext(Dispatchers.Main)  {
                 //2- Crear y modificar el adaptador
-                val miAdaptador = ArrayAdapter(this@activity_seleccion_asientos, android.R.layout.simple_spinner_dropdown_item, Asiento)
+                val miAdaptador = ArrayAdapter(this@activity_seleccion_asientos, android.R.layout.simple_spinner_dropdown_item, Asientoss)
                 spSeleccionarAsientos.adapter = miAdaptador
             }
         }

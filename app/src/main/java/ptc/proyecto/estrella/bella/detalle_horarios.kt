@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import modelo.ClaseConexion
 import modelo.listaHorarioFunciones
+import ptc.proyecto.estrella.bella.ui.home.HomeFragment
 
 class detalle_horarios : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,18 +46,9 @@ class detalle_horarios : AppCompatActivity() {
             startActivity(intent)
         }
 
+        val imagenDetalleHorarios = HomeFragment.imagenSeleccionada
 
-        val uriIntensamente = intent.getStringExtra("uriIntensamente")
-        val uriUp = intent.getStringExtra("uriUp")
-        val uriMarioBros = intent.getStringExtra("uriMarioBros")
-        val uriMonsterInc = intent.getStringExtra("uriMonsterInc")
-        val uriVenomLetThereBeCarnage = intent.getStringExtra("uriVenomLetThereBeCarnage")
-        val uriVenom = intent.getStringExtra("uriVenom")
-        val uriAcrossTheSpiderverse = intent.getStringExtra("uriAcrossTheSpiderverse")
-        val uriIntoTheSpiderverse = intent.getStringExtra("uriIntoTheSpiderverse")
-
-
-        val urlDetalleHorario = Glide.with(this).load(uriIntensamente).into(imgDetalleHorarios1)
+        val urlDetalleHorario = Glide.with(this).load(imagenDetalleHorarios).into(imgDetalleHorarios1)
 
         fun obtenerHorarioFuncion(): List<listaHorarioFunciones>{
             val objConexion = ClaseConexion().cadenaConexion()
