@@ -71,7 +71,8 @@ CREATE TABLE Clasificacion (
     nombre_clasificacion VARCHAR2(20)
 );
 
-INSERT INTO Clasificacion (clasificacion_id, nombre_clasificacion) VALUES (1, 'bl')
+INSERT INTO Clasificacion (clasificacion_id, nombre_clasificacion)
+VALUES (1, 'bl');
 INSERT INTO Clasificacion (clasificacion_id, nombre_clasificacion) 
 VALUES (2, 'A');
 INSERT INTO Clasificacion (clasificacion_id, nombre_clasificacion) 
@@ -89,11 +90,11 @@ CREATE TABLE GeneroPelicula (
     genero VARCHAR2(25) UNIQUE NOT NULL
 );
 
-INSERT INTO GeneroPelicula (genero_id, genero) VALUES (1, 'Acción')
-INSERT INTO GeneroPelicula (genero_id, genero) VALUES (2, 'Aventura')
-INSERT INTO GeneroPelicula (genero_id, genero) VALUES (3, 'Romance')
-INSERT INTO GeneroPelicula (genero_id, genero) VALUES (4, 'Terror')
-INSERT INTO GeneroPelicula (genero_id, genero) VALUES (5, 'Psicoanálisis')
+INSERT INTO GeneroPelicula (genero_id, genero) VALUES (1, 'Acción');
+INSERT INTO GeneroPelicula (genero_id, genero) VALUES (2, 'Aventura');
+INSERT INTO GeneroPelicula (genero_id, genero) VALUES (3, 'Romance');
+INSERT INTO GeneroPelicula (genero_id, genero) VALUES (4, 'Terror');
+INSERT INTO GeneroPelicula (genero_id, genero) VALUES (5, 'Psicoanálisis');
 
 SELECT * FROM GeneroPelicula
 
@@ -111,11 +112,11 @@ CREATE TABLE Salas_PTC (
     capacidad_asientos INT NOT NULL
 );
 
-INSERT INTO Salas_PTC (sala_id, nombre, capacidad_asientos) VALUES (1, '1A', 20)
-INSERT INTO Salas_PTC (sala_id, nombre, capacidad_asientos) VALUES (2, '1B', 20)
-INSERT INTO Salas_PTC (sala_id, nombre, capacidad_asientos) VALUES (3, '1C', 20)
-INSERT INTO Salas_PTC (sala_id, nombre, capacidad_asientos) VALUES (4, '1D', 20)
-INSERT INTO Salas_PTC (sala_id, nombre, capacidad_asientos) VALUES (5, '1E', 20)
+INSERT INTO Salas_PTC (sala_id, nombre, capacidad_asientos) VALUES (1, '1A', 20);
+INSERT INTO Salas_PTC (sala_id, nombre, capacidad_asientos) VALUES (2, '1B', 20);
+INSERT INTO Salas_PTC (sala_id, nombre, capacidad_asientos) VALUES (3, '1C', 20);
+INSERT INTO Salas_PTC (sala_id, nombre, capacidad_asientos) VALUES (4, '1D', 20);
+INSERT INTO Salas_PTC (sala_id, nombre, capacidad_asientos) VALUES (5, '1E', 20);
 
 SELECT * FROM Salas_PTC
 
@@ -128,11 +129,11 @@ CREATE TABLE Asientos (
     CONSTRAINT fk_asientos_sala_id FOREIGN KEY (sala_id) REFERENCES Salas_PTC(sala_id)
 );
 
-INSERT INTO Asientos (asiento_id, sala_id, fila, numero) VALUES (1, 1, 'A', 1)
-INSERT INTO Asientos (asiento_id, sala_id, fila, numero) VALUES (2, 1, 'A', 2)
-INSERT INTO Asientos (asiento_id, sala_id, fila, numero) VALUES (3, 1, 'A', 3)
-INSERT INTO Asientos (asiento_id, sala_id, fila, numero) VALUES (4, 1, 'A', 4)
-INSERT INTO Asientos (asiento_id, sala_id, fila, numero) VALUES (5, 1, 'A', 5)
+INSERT INTO Asientos (asiento_id, sala_id, fila, numero) VALUES (1, 1, 'A', 1);
+INSERT INTO Asientos (asiento_id, sala_id, fila, numero) VALUES (2, 1, 'A', 2);
+INSERT INTO Asientos (asiento_id, sala_id, fila, numero) VALUES (3, 1, 'A', 3);
+INSERT INTO Asientos (asiento_id, sala_id, fila, numero) VALUES (4, 1, 'A', 4);
+INSERT INTO Asientos (asiento_id, sala_id, fila, numero) VALUES (5, 1, 'A', 5);
 
 select * from Asientos
 
@@ -190,13 +191,13 @@ CREATE TABLE Reservas_PTC (
 CREATE TABLE Horario_Funcion(
 horario_id INT PRIMARY KEY,
 hora VARCHAR2(5)
-)
+);
 
-INSERT INTO Horario_Funcion (horario_id, hora) VALUES (1, '12:00')
-INSERT INTO Horario_Funcion (horario_id, hora) VALUES (2, '2:00')
-INSERT INTO Horario_Funcion (horario_id, hora) VALUES (3, '8:00')
-INSERT INTO Horario_Funcion (horario_id, hora) VALUES (4, '14:00')
-INSERT INTO Horario_Funcion (horario_id, hora) VALUES (5, '16:00')
+INSERT INTO Horario_Funcion (horario_id, hora) VALUES (1, '12:00');
+INSERT INTO Horario_Funcion (horario_id, hora) VALUES (2, '2:00');
+INSERT INTO Horario_Funcion (horario_id, hora) VALUES (3, '8:00');
+INSERT INTO Horario_Funcion (horario_id, hora) VALUES (4, '14:00');
+INSERT INTO Horario_Funcion (horario_id, hora) VALUES (5, '16:00');
 
 SELECT * FROM Horario_Funcion
 
@@ -230,8 +231,8 @@ CREATE TABLE Estado_disponible_ocupado (
     estado VARCHAR2(10)
 );
 
-INSERT INTO Estado_disponible_ocupado (estado_id, estado) VALUES (1, 'disponible')
-INSERT INTO Estado_disponible_ocupado (estado_id, estado) VALUES (2, 'ocupado')
+INSERT INTO Estado_disponible_ocupado (estado_id, estado) VALUES (1, 'disponible');
+INSERT INTO Estado_disponible_ocupado (estado_id, estado) VALUES (2, 'ocupado');
 
 SELECT p.titulo, g.genero 
 FROM Peliculas p
