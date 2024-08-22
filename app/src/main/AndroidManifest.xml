@@ -12,17 +12,19 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/square_appicon"
-        android:label="CinemaNow
-"
+        android:label="CinemaNow "
         android:roundIcon="@drawable/round_appicon"
         android:supportsRtl="true"
         android:theme="@style/Theme.Material3.Dark"
         tools:targetApi="31">
         <activity
+            android:name=".activity_edit_account"
+            android:exported="false"
+            android:theme="@style/Theme.Material3.Dark.NoActionBar"/>
+        <activity
             android:name=".activity_connection_error"
             android:exported="false"
-            android:theme="@style/Theme.Material3.Dark.NoActionBar"
-        />
+            android:theme="@style/Theme.Material3.Dark.NoActionBar" />
         <activity
             android:name=".activity_login"
             android:exported="false" />
