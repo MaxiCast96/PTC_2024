@@ -390,8 +390,8 @@ DROP SEQUENCE asientos_seq;
 DROP SEQUENCE funciones_seq;
 DROP SEQUENCE tipo_funcion_seq;
 DROP SEQUENCE idioma_funcion_seq;
-```
 DROP SEQUENCE reservas_ptc_seq;
 DROP SEQUENCE detalles_reservas_seq;
 DROP SEQUENCE estado_asientos_seq;
 DROP SEQUENCE estado_disponible_ocupado_seq;
+```
