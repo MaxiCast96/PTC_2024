@@ -12,7 +12,7 @@ class UserViewModel : ViewModel() {
     private val _email = MutableLiveData<String>()
     val email: LiveData<String> get() = _email
 
-    private val _profilePicture = MutableLiveData<String>() // Suponiendo que es la URI de la imagen
+    private val _profilePicture = MutableLiveData<String>()
     val profilePicture: LiveData<String> get() = _profilePicture
 
     fun setUserInfo(nombre: String, email: String, profilePicture: String) {
@@ -20,6 +20,7 @@ class UserViewModel : ViewModel() {
         _email.value = email
         _profilePicture.value = profilePicture
     }
+
 
     fun loadUserInfo(context: Context) {
         val sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
