@@ -18,9 +18,9 @@ class ClaseConexion {
             //val Aldo = DriverManager.getConnection("", "", "")
             //val LaboratorioAldo = DriverManager.getConnection("", "", "")
 
-            val ip = "jdbc:oracle:thin:@192.168.56.1:1521:xe"
-            val usuario = "ANDRE_DEVELOPER"
-            val contrasena = "Seraphine"
+            val ip = "jdbc:oracle:thin:@192.168.1.21:1521:xe"
+            val usuario = "Guille_DEVELOPER"
+            val contrasena = "holacanola123"
 
             val conexion = DriverManager.getConnection(ip, usuario, contrasena)
             return conexion
