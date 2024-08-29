@@ -10,12 +10,12 @@ import android.provider.MediaStore
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
-import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -26,7 +26,6 @@ import java.sql.PreparedStatement
 class activity_edit_account : AppCompatActivity() {
 
     private val userViewModel: UserViewModel by viewModels()
-    private lateinit var AnimFoto: ImageView
     private lateinit var imgFotoPerfil: ImageView
     private lateinit var imgEditNombre: ImageView
     private lateinit var imgEditCorreo: ImageView
@@ -44,8 +43,6 @@ class activity_edit_account : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_account)
 
-        userViewModel.loadUserInfo(this)
-
         // Obtener referencias de la UI
         val lblNombre = findViewById<TextView>(R.id.lblNombre)
         val lblEmail = findViewById<TextView>(R.id.lblEmail)
@@ -55,7 +52,6 @@ class activity_edit_account : AppCompatActivity() {
         btnGuardarCambios = findViewById(R.id.btnGuardarCambios)
         val btnGoBack = findViewById<ImageView>(R.id.imgGoBack)
         val btnContraseña = findViewById<Button>(R.id.btnContraseña)
-        AnimFoto = findViewById(R.id.AnimFoto)
 
         btnGoBack.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
@@ -66,24 +62,30 @@ class activity_edit_account : AppCompatActivity() {
             startActivity(intent)
         }
 
-        AnimFoto.setOnClickListener {
+        imgFotoPerfil.setOnClickListener {
             openGallery()
         }
 
         imgEditNombre.setOnClickListener {
             showEditDialog("nombre", lblNombre.text.toString()) { nuevoNombre ->
-                userViewModel.setUserInfo(nuevoNombre, userViewModel.email.value!!, userViewModel.profilePicture.value!!)
+                userViewModel.setUserInfo(nuevoNombre, userViewModel.email.value ?: "", userViewModel.profilePicture.value)
+                userViewModel.saveUserInfo(this, nuevoNombre, userViewModel.email.value ?: "", userViewModel.profilePicture.value)
+                lblNombre.text = nuevoNombre
+
                 lifecycleScope.launch {
-                    actualizarUsuarioEnBaseDeDatos("nombre", nuevoNombre, userViewModel.email.value!!)
+                    actualizarUsuarioEnBaseDeDatos("nombre", nuevoNombre)
                 }
             }
         }
 
         imgEditCorreo.setOnClickListener {
             showEditDialog("correo", lblEmail.text.toString()) { nuevoCorreo ->
-                userViewModel.setUserInfo(userViewModel.nombre.value!!, nuevoCorreo, userViewModel.profilePicture.value!!)
+                userViewModel.setUserInfo(userViewModel.nombre.value ?: "", nuevoCorreo, userViewModel.profilePicture.value)
+                userViewModel.saveUserInfo(this, userViewModel.nombre.value ?: "", nuevoCorreo, userViewModel.profilePicture.value)
+                lblEmail.text = nuevoCorreo
+
                 lifecycleScope.launch {
-                    actualizarUsuarioEnBaseDeDatos("email", nuevoCorreo, userViewModel.email.value!!)
+                    actualizarUsuarioEnBaseDeDatos("email", nuevoCorreo)
                 }
             }
         }
@@ -92,15 +94,20 @@ class activity_edit_account : AppCompatActivity() {
             val nuevoNombre = lblNombre.text.toString()
             val nuevoCorreo = lblEmail.text.toString()
 
-            userViewModel.setUserInfo(nuevoNombre, nuevoCorreo, userViewModel.profilePicture.value!!)
-
             lifecycleScope.launch {
-                actualizarUsuarioEnBaseDeDatos("nombre", nuevoNombre, userViewModel.email.value!!)
-                actualizarUsuarioEnBaseDeDatos("email", nuevoCorreo, nuevoCorreo)
+                try {
+                    actualizarUsuarioEnBaseDeDatos("nombre", nuevoNombre)
+                    actualizarUsuarioEnBaseDeDatos("email", nuevoCorreo)
+                    Toast.makeText(this@activity_edit_account, "Cambios guardados", Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@activity_edit_account, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                    }
+                }
             }
         }
 
-        // Observar los datos del ViewModel
+        // actualizar la UI cuando los datos cambian
         userViewModel.nombre.observe(this, { nombre ->
             lblNombre.text = nombre
         })
@@ -113,6 +120,8 @@ class activity_edit_account : AppCompatActivity() {
             Glide.with(this).load(profilePicture).into(imgFotoPerfil)
         })
 
+        // Cargar los datos iniciales
+        userViewModel.loadUserInfo(this)
     }
 
     private fun openGallery() {
@@ -124,10 +133,10 @@ class activity_edit_account : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.dialog_edit_text, null)
-        val editText = dialogLayout.findViewById<TextInputEditText>(R.id.editText)
+        val editText = dialogLayout.findViewById<TextView>(R.id.editText)
         val titulo = if (campo == "nombre") "Ingresa el nuevo nombre" else "Ingresa el nuevo correo"
 
-        editText.setText(valorActual)
+        editText.text = valorActual
         builder.setTitle(titulo)
         builder.setView(dialogLayout)
         builder.setPositiveButton("Guardar") { _, _ ->
@@ -138,14 +147,14 @@ class activity_edit_account : AppCompatActivity() {
         builder.show()
     }
 
-    private suspend fun actualizarUsuarioEnBaseDeDatos(campo: String, nuevoValor: String, emailActual: String) {
+    private suspend fun actualizarUsuarioEnBaseDeDatos(campo: String, nuevoValor: String) {
         withContext(Dispatchers.IO) {
             val conexion: Connection? = ClaseConexion().cadenaConexion()
             if (conexion != null) {
                 val query = "UPDATE usuarios SET $campo = ? WHERE email = ?"
                 val preparedStatement: PreparedStatement = conexion.prepareStatement(query)
                 preparedStatement.setString(1, nuevoValor)
-                preparedStatement.setString(2, emailActual)
+                preparedStatement.setString(2, userViewModel.email.value)
                 preparedStatement.executeUpdate()
 
                 val commitQuery = "COMMIT"
