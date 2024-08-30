@@ -395,4 +395,12 @@ DROP SEQUENCE reservas_ptc_seq;
 DROP SEQUENCE detalles_reservas_seq;
 DROP SEQUENCE estado_asientos_seq;
 DROP SEQUENCE estado_disponible_ocupado_seq;
+
+
+--Usuario de Prueba--
+INSERT INTO Usuarios (usuario_id, nombre, email, contraseña, rol_id, foto_perfil)
+VALUES (usuarios_seq.NEXTVAL, 'LoginTest', 'logintest@gmail.com', 'LoginTest', 3, 'Placeholder Foto');
+
+SELECT * FROM Usuarios WHERE email = 'logintest@gmail.com' AND contraseña = 'LoginTest';
+
 ```
