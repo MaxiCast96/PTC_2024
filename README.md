@@ -5,7 +5,7 @@ Base de datos del proyecto:
 ALTER SESSION SET "_ORACLE_SCRIPT" = TRUE;
 
 -- Crear usuario y otorgarle permisos de conexión
-CREATE USER ANDRE_DEVELOPER IDENTIFIED BY "1234";
+CREATE USER CinemaNOW IDENTIFIED BY "Estrella_Bella!";
 GRANT CONNECT TO ANDRE_DEVELOPER;
 
 -- Crear secuencias para AUTO_INCREMENT
