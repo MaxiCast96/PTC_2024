@@ -149,7 +149,7 @@ CREATE TABLE Funciones (
     CONSTRAINT fk_funciones_sala_id FOREIGN KEY (sala_id) REFERENCES Salas_PTC(sala_id),
     CONSTRAINT fk_funciones_tipo_id FOREIGN KEY (tipo_id) REFERENCES TipoFuncion(tipo_id),
     CONSTRAINT fk_funciones_idioma_id FOREIGN KEY (idioma_id) REFERENCES IdiomaFuncion(idioma_id),
-    CONSTRAINT fk_funciones_horario_id FOREIGN KEY (funcion_id) REFERENCES Horario_Funcion(horario_id)
+    CONSTRAINT fk_funciones_horario_id FOREIGN KEY (horario_id) REFERENCES Horario_Funcion(horario_id)
 );
 
 INSERT INTO Funciones (funcion_id, pelicula_id, sala_id, fecha_hora, tipo_id, idioma_id, horario_id)
