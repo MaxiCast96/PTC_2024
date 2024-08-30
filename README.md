@@ -6,7 +6,7 @@ ALTER SESSION SET "_ORACLE_SCRIPT" = TRUE;
 
 -- Crear usuario y otorgarle permisos de conexión
 CREATE USER CinemaNOW IDENTIFIED BY "Estrella_Bella!";
-GRANT CONNECT TO ANDRE_DEVELOPER;
+GRANT CONNECT TO `CinemaNOW;
 
 -- Crear secuencias para AUTO_INCREMENT
 CREATE SEQUENCE roles_seq START WITH 1 INCREMENT BY 1;
