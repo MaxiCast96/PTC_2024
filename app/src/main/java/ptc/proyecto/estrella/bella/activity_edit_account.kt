@@ -16,6 +16,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -31,6 +33,7 @@ class activity_edit_account : AppCompatActivity() {
     private lateinit var imgEditCorreo: ImageView
     private var imageUri: Uri? = null
     private lateinit var btnGuardarCambios: Button
+    private lateinit var storageReference: StorageReference
 
     private val getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK && result.data != null) {
@@ -42,7 +45,8 @@ class activity_edit_account : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_account)
-
+        //Firebase
+        storageReference = FirebaseStorage.getInstance().reference
         // Obtener referencias de la UI
         val lblNombre = findViewById<TextView>(R.id.lblNombre)
         val lblEmail = findViewById<TextView>(R.id.lblEmail)
@@ -94,20 +98,37 @@ class activity_edit_account : AppCompatActivity() {
             val nuevoNombre = lblNombre.text.toString()
             val nuevoCorreo = lblEmail.text.toString()
 
-            lifecycleScope.launch {
-                try {
-                    actualizarUsuarioEnBaseDeDatos("nombre", nuevoNombre)
-                    actualizarUsuarioEnBaseDeDatos("email", nuevoCorreo)
-                    Toast.makeText(this@activity_edit_account, "Cambios guardados", Toast.LENGTH_SHORT).show()
-                } catch (e: Exception) {
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(this@activity_edit_account, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+            if (imageUri != null) {
+                subirImagenYGuardarDatos(imageUri!!) { imageUrl ->
+                    lifecycleScope.launch {
+                        try {
+                            actualizarUsuarioEnBaseDeDatos("nombre", nuevoNombre)
+                            actualizarUsuarioEnBaseDeDatos("email", nuevoCorreo)
+                            actualizarUsuarioEnBaseDeDatos("profilePicture", imageUrl)
+                            Toast.makeText(this@activity_edit_account, "Cambios guardados", Toast.LENGTH_SHORT).show()
+                        } catch (e: Exception) {
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(this@activity_edit_account, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                            }
+                        }
+                    }
+                }
+            } else {
+                lifecycleScope.launch {
+                    try {
+                        actualizarUsuarioEnBaseDeDatos("nombre", nuevoNombre)
+                        actualizarUsuarioEnBaseDeDatos("email", nuevoCorreo)
+                        Toast.makeText(this@activity_edit_account, "Cambios guardados", Toast.LENGTH_SHORT).show()
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            Toast.makeText(this@activity_edit_account, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                        }
                     }
                 }
             }
         }
 
-        // actualizar la UI cuando los datos cambian
+        // Actualizar la UI cuando los datos cambian
         userViewModel.nombre.observe(this, { nombre ->
             lblNombre.text = nombre
         })
@@ -120,13 +141,28 @@ class activity_edit_account : AppCompatActivity() {
             Glide.with(this).load(profilePicture).into(imgFotoPerfil)
         })
 
-        // Cargar los datos iniciales
+        // Cargar datos
         userViewModel.loadUserInfo(this)
     }
 
     private fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         getResult.launch(intent)
+    }
+
+    private fun subirImagenYGuardarDatos(uri: Uri, onSuccess: (String) -> Unit) {
+        val fileReference = storageReference.child("profile_pictures/${System.currentTimeMillis()}.jpg")
+        fileReference.putFile(uri)
+            .addOnSuccessListener {
+                fileReference.downloadUrl.addOnSuccessListener { downloadUri ->
+                    onSuccess(downloadUri.toString())
+                }.addOnFailureListener {
+                    Toast.makeText(this, "Error al obtener el enlace de la imagen.", Toast.LENGTH_LONG).show()
+                }
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Error al subir la imagen.", Toast.LENGTH_LONG).show()
+            }
     }
 
     private fun showEditDialog(campo: String, valorActual: String, onSave: (String) -> Unit) {
@@ -154,7 +190,7 @@ class activity_edit_account : AppCompatActivity() {
                 val query = "UPDATE usuarios SET $campo = ? WHERE email = ?"
                 val preparedStatement: PreparedStatement = conexion.prepareStatement(query)
                 preparedStatement.setString(1, nuevoValor)
-                preparedStatement.setString(2, userViewModel.email.value)
+                preparedStatement.setString(2, userViewModel.email.value ?: "")
                 preparedStatement.executeUpdate()
 
                 val commitQuery = "COMMIT"
