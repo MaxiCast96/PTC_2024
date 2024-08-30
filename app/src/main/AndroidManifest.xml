@@ -44,7 +44,8 @@
             android:exported="false" />
         <activity
             android:name=".activity_pago"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.Material3.Dark.NoActionBar"/>
         <activity
             android:name=".activity_signup"
             android:exported="false" />

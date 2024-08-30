@@ -52,7 +52,7 @@
     <Button
         android:id="@+id/btnEditAccount"
         android:layout_width="185dp"
-        android:layout_height="45dp"
+        android:layout_height="52dp"
         android:backgroundTint="#F85D74"
         android:fontFamily="@font/montserrat_medium"
         android:text="Editar Cuenta"

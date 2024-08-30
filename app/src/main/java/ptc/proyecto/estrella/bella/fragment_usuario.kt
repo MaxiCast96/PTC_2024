@@ -29,6 +29,12 @@ class fragment_usuario : Fragment() {
         val imgProfilePicture = view.findViewById<ImageView>(R.id.imgProfilePicture)
         val btnCerrarSesion = view.findViewById<Button>(R.id.btnLogout)
         val btnEditAccount = view.findViewById<Button>(R.id.btnEditAccount)
+        val btnDetalleFacturaEdit = view.findViewById<Button>(R.id.btnDetalleFacturaEdit)
+
+        btnDetalleFacturaEdit.setOnClickListener {
+            val intent = Intent(requireContext(), activity_pago::class.java)
+            startActivity(intent)
+        }
 
         btnEditAccount.setOnClickListener {
             val intent = Intent(requireContext(), activity_edit_account::class.java)
