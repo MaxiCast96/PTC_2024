@@ -198,7 +198,11 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="#A42833" />
+            android:backgroundTint="#A42833"
+            android:hint="000"
+            android:inputType="number"
+            android:maxLength="3"
+            android:textColorHint="#737373" />
 
     </com.google.android.material.textfield.TextInputLayout>
     <TextView
@@ -285,7 +289,10 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="#A42833" />
+            android:backgroundTint="#A42833"
+            android:inputType="datetime"
+            android:maxLength="5"
+            android:hint="MM/AA"/>
 
     </com.google.android.material.textfield.TextInputLayout>
     <Button

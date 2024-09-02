@@ -30,7 +30,8 @@
             android:exported="false" />
         <activity
             android:name=".activity_detalle_venta"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.Material3.Dark.NoActionBar" />
         <activity
             android:name=".activity_historial"
             android:exported="false" />
@@ -41,7 +42,8 @@
         <activity android:name=".DetallesActivity" />
         <activity
             android:name=".activity_seleccion_asientos"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.Material3.Dark.NoActionBar"/>
         <activity
             android:name=".activity_pago"
             android:exported="false"
@@ -60,7 +62,8 @@
             android:exported="false" />
         <activity
             android:name=".detalle_horarios"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.Material3.Dark.NoActionBar" />
         <activity
             android:name=".activity_item_card"
             android:exported="false" />

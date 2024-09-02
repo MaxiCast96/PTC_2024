@@ -1,16 +1,14 @@
 package ptc.proyecto.estrella.bella
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.Space
 import android.widget.Spinner
-import androidx.activity.enableEdgeToEdge
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,43 +18,47 @@ import modelo.ClaseConexion
 import modelo.listaHorarioFunciones
 
 class detalle_horarios : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_detalle_horarios)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
 
-        val spSeleccionarSala = findViewById<Spinner>(R.id.spDetalleHorario)
-        val btnReservarEntradas = findViewById<Button>(R.id.btnReservarEntradas)
-        val imgDetalleHorarios1 = findViewById<ImageView>(R.id.imgDetalleHorarios1)
-        val imgAtras = findViewById<ImageView>(R.id.imgAtras)
+        val imgDetalleHorarios: ImageView = findViewById(R.id.imgDetalleHorarios)
+        val txtDescripcion: TextView = findViewById(R.id.txtDescripcion)
+        val txtElegirHora: TextView = findViewById(R.id.txtElegirHora)
+        val spDetalleHorario: Spinner = findViewById(R.id.spDetalleHorario)
+        val imgPlayTrailer: ImageView = findViewById(R.id.imgPlayTrailer)
+        val imgAtras: ImageView = findViewById(R.id.imgAtras)
+        val btnReservarEntradas: Button = findViewById(R.id.btnReservarEntradas)
 
-        imgAtras.setOnClickListener {
-            val intent = Intent(this, MainActivity ::class.java)
-            startActivity(intent)
-        }
+        // Recibir datos del intent
+        val peliculaId = intent.getIntExtra("PELICULA_ID", 0)
+        val titulo = intent.getStringExtra("TITULO")
+        val descripcion = intent.getStringExtra("DESCRIPCION")
+        val duracion = intent.getIntExtra("DURACION", 0)
+        val clasificacionId = intent.getIntExtra("CLASIFICACION_ID", 0)
+        val generoId = intent.getIntExtra("GENERO_ID", 0)
+        val poster = intent.getStringExtra("POSTER")
+        val trailer = intent.getStringExtra("TRAILER")
 
-        btnReservarEntradas.setOnClickListener{
+        btnReservarEntradas.setOnClickListener {
             val intent = Intent(this, activity_seleccion_asientos::class.java)
             startActivity(intent)
         }
+        // Muestra los datos en la UI
+        txtDescripcion.text = descripcion
+        Glide.with(this)
+            .load(poster)
+            .into(imgDetalleHorarios)
 
+        imgAtras.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
 
-        val uriIntensamente = intent.getStringExtra("uriIntensamente")
-        val uriUp = intent.getStringExtra("uriUp")
-        val uriMarioBros = intent.getStringExtra("uriMarioBros")
-        val uriMonsterInc = intent.getStringExtra("uriMonsterInc")
-        val uriVenomLetThereBeCarnage = intent.getStringExtra("uriVenomLetThereBeCarnage")
-        val uriVenom = intent.getStringExtra("uriVenom")
-        val uriAcrossTheSpiderverse = intent.getStringExtra("uriAcrossTheSpiderverse")
-        val uriIntoTheSpiderverse = intent.getStringExtra("uriIntoTheSpiderverse")
-
-
-        val urlDetalleHorario = Glide.with(this).load(uriIntensamente).into(imgDetalleHorarios1)
+        imgPlayTrailer.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(trailer))
+            startActivity(intent)
+        }
 
         fun obtenerHorarioFuncion(): List<listaHorarioFunciones>{
             val objConexion = ClaseConexion().cadenaConexion()
@@ -85,7 +87,7 @@ class detalle_horarios : AppCompatActivity() {
             withContext(Dispatchers.Main)  {
                 //2- Crear y modificar el adaptador
                 val miAdaptador = ArrayAdapter(this@detalle_horarios, android.R.layout.simple_spinner_dropdown_item, horaFuncion)
-                spSeleccionarSala.adapter = miAdaptador
+                spDetalleHorario.adapter = miAdaptador
             }
         }
 

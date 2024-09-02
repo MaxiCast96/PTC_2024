@@ -9,6 +9,8 @@
     android:backgroundTint="#362F5C"
     tools:context=".detalle_horarios">
 
+
+
     <ImageView
         android:id="@+id/imgDetalleHorarios"
         android:layout_width="wrap_content"
@@ -19,10 +21,34 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imgDetalleHorarios1"
+        android:layout_width="759dp"
+        android:layout_height="368dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:background="@color/black"
+        app:shapeAppearanceOverlay="@style/redondeado"/>
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="416dp"
+        android:layout_height="808dp"
+        android:background="#801F1C4B"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="336dp"
-        android:layout_height="225dp"
+        android:layout_width="338dp"
+        android:layout_height="288dp"
         android:background="@drawable/background_element"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -30,13 +56,26 @@
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.75">
+        app:layout_constraintVertical_bias="0.887">
+
+        <TextView
+            android:id="@+id/txtDescripcion"
+            android:layout_width="match_parent"
+            android:layout_height="117dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginHorizontal="5dp"
+            android:fontFamily="@font/montserrat_medium"
+            android:text="Descripcion"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/txtElegirHora"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="10dp"
+            android:layout_marginVertical="5dp"
             android:fontFamily="@font/montserrat_medium"
             android:text="Selecciona un horario"
             android:textAlignment="center"
@@ -46,10 +85,35 @@
         <Spinner
             android:id="@+id/spDetalleHorario"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_medium"/>
+            android:layout_height="34dp"
+            android:fontFamily="@font/montserrat_medium"
+            android:textAlignment="center"
+            android:layout_marginHorizontal="100dp"/>
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imgPlayTrailer"
+        android:layout_width="71dp"
+        android:layout_height="64dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.244"
+        app:srcCompat="@drawable/ic_play" />
+
+    <ImageView
+        android:id="@+id/imgAtras"
+        android:layout_width="54dp"
+        android:layout_height="44dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.044"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.074"
+        app:srcCompat="@drawable/baseline_keyboard_arrow_left_24" />
 
     <Button
         android:id="@+id/btnReservarEntradas"
@@ -63,33 +127,8 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.853" />
-
-    <ImageView
-        android:id="@+id/imgAtras"
-        android:layout_width="54dp"
-        android:layout_height="44dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.044"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.02"
-        app:srcCompat="@drawable/baseline_keyboard_arrow_left_24" />
-
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/imgDetalleHorarios1"
-        android:layout_width="759dp"
-        android:layout_height="368dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        tools:background="@color/black"
-        app:shapeAppearanceOverlay="@style/redondeado"/>
+        app:layout_constraintVertical_bias="0.92" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

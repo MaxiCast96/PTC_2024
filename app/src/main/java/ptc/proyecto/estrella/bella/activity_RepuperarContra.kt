@@ -38,7 +38,8 @@ class activity_RepuperarContra : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        correoUsuario = intent.getStringExtra("correo_usuario").orEmpty()
+        // Recibiendo el correo pasado desde la actividad anterior
+        correoUsuario = intent.getStringExtra("correo").orEmpty()
 
         val navView: BottomNavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
@@ -63,9 +64,8 @@ class activity_RepuperarContra : AppCompatActivity() {
         val txtNuevaContraseña = findViewById<TextInputLayout>(R.id.txtNuevaContraseña)
         val txtRecuperarNuevaContraseña = findViewById<TextInputLayout>(R.id.txtRecuperarNuevaContraseña)
 
-        //hacer que al tocar cualquier parte de la pantalla se deseleccionen los edit text
+        // Hacer que al tocar cualquier parte de la pantalla se deseleccionen los EditText
         val rootLayout = findViewById<ConstraintLayout>(R.id.main)
-
         rootLayout.setOnTouchListener { v, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 currentFocus?.let { view ->
@@ -144,7 +144,7 @@ class activity_RepuperarContra : AppCompatActivity() {
                 val preparedStatement: PreparedStatement = conexion.prepareStatement(query)
                 preparedStatement.setString(1, nuevaContraseña)
                 preparedStatement.setString(2, correo)
-                Log.d("RecuperarContra","Este es el correo que usarè para cambiar la contra: $correo");
+                Log.d("RecuperarContra","Este es el correo que usaré para cambiar la contraseña: $correo")
                 preparedStatement.executeUpdate()
 
                 val commitQuery = "COMMIT"

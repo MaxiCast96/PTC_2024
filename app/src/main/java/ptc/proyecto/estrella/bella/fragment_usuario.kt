@@ -22,8 +22,7 @@ class fragment_usuario : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_usuario, container, false)
-
-        // Obtener referencias a los TextViews y ImageView
+        
         val lblNombre = view.findViewById<TextView>(R.id.lblNombre)
         val lblEmail = view.findViewById<TextView>(R.id.lblEmail)
         val imgProfilePicture = view.findViewById<ImageView>(R.id.imgProfilePicture)

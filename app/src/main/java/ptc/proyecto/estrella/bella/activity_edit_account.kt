@@ -104,7 +104,7 @@ class activity_edit_account : AppCompatActivity() {
                         try {
                             actualizarUsuarioEnBaseDeDatos("nombre", nuevoNombre)
                             actualizarUsuarioEnBaseDeDatos("email", nuevoCorreo)
-                            actualizarUsuarioEnBaseDeDatos("profilePicture", imageUrl)
+                            actualizarUsuarioEnBaseDeDatos("foto_perfil", imageUrl)
                             Toast.makeText(this@activity_edit_account, "Cambios guardados", Toast.LENGTH_SHORT).show()
                         } catch (e: Exception) {
                             withContext(Dispatchers.Main) {
