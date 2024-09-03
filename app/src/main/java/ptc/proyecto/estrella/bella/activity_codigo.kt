@@ -26,6 +26,8 @@ class activity_codigo : AppCompatActivity() {
 
         txtCodigo = findViewById(R.id.txtCodigo)
 
+        val correo = intent.getStringExtra("correo")
+
         val btnReenviar = findViewById<Button>(R.id.btnReenviar)
 
         val btnCodigo: Button = findViewById(R.id.btnComprobarCodigo)
@@ -38,6 +40,7 @@ class activity_codigo : AppCompatActivity() {
         btnCodigo.setOnClickListener {
             if (validarCodigo()) {
                 val intent = Intent(this, activity_RepuperarContra::class.java)
+                intent.putExtra("correo", correo)
                 startActivity(intent)
                 finish()
             }

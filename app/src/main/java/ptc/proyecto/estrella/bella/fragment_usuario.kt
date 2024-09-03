@@ -1,15 +1,18 @@
 package ptc.proyecto.estrella.bella
 
 import RecyclerViewHelpers.UserViewModel
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.bumptech.glide.Glide
 
 class fragment_usuario : Fragment() {
     private val userViewModel: UserViewModel by activityViewModels()
@@ -18,18 +21,41 @@ class fragment_usuario : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_usuario, container, false)
-
-        // Obtener referencias a los TextViews
+        
         val lblNombre = view.findViewById<TextView>(R.id.lblNombre)
         val lblEmail = view.findViewById<TextView>(R.id.lblEmail)
-
+        val imgProfilePicture = view.findViewById<ImageView>(R.id.imgProfilePicture)
         val btnCerrarSesion = view.findViewById<Button>(R.id.btnLogout)
+        val btnEditAccount = view.findViewById<Button>(R.id.btnEditAccount)
+        val btnDetalleFacturaEdit = view.findViewById<Button>(R.id.btnDetalleFacturaEdit)
+
+        btnDetalleFacturaEdit.setOnClickListener {
+            val intent = Intent(requireContext(), activity_pago::class.java)
+            startActivity(intent)
+        }
+
+        btnEditAccount.setOnClickListener {
+            val intent = Intent(requireContext(), activity_edit_account::class.java)
+            startActivity(intent)
+
+        }
 
         btnCerrarSesion.setOnClickListener {
-            val intent = Intent(requireActivity(), activity_login::class.java)
-            startActivity(intent)
+            AlertDialog.Builder(requireContext())
+                .setTitle("Cierre de sesión")
+                .setMessage("¿Estás seguro de que deseas cerrar sesión?")
+                .setPositiveButton("Sí") { dialogInterface, _ ->
+                    // Acción al confirmar cierre de sesión
+                    val intent = Intent(requireActivity(), activity_login::class.java)
+                    startActivity(intent)
+                    dialogInterface.dismiss()
+                }
+                .setNegativeButton("No") { dialogInterface, _ ->
+                    // Acción al cancelar
+                    dialogInterface.dismiss()
+                }
+                .show()
         }
 
         // Observar los datos ViewModel
@@ -39,6 +65,10 @@ class fragment_usuario : Fragment() {
 
         userViewModel.email.observe(viewLifecycleOwner, { email ->
             lblEmail.text = email
+        })
+
+        userViewModel.profilePicture.observe(viewLifecycleOwner, { profilePicture ->
+            Glide.with(this).load(profilePicture).into(imgProfilePicture)
         })
 
         return view

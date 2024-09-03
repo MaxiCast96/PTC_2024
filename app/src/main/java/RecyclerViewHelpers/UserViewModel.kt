@@ -1,28 +1,40 @@
 package RecyclerViewHelpers
 
-import androidx.lifecycle.LiveData
+import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class UserViewModel : ViewModel() {
-    private val _nombre = MutableLiveData<String>()
-    val nombre: LiveData<String> get() = _nombre
+    val nombre = MutableLiveData<String?>()
+    val email = MutableLiveData<String?>()
+    val profilePicture = MutableLiveData<String?>()
 
-    private val _email = MutableLiveData<String>()
-    val email: LiveData<String> get() = _email
-
-    private val _fotoPerfil = MutableLiveData<String>()
-    val fotoPerfil: LiveData<String> get() = _fotoPerfil
-
-    fun setNombre(nombre: String) {
-        _nombre.value = nombre
+    fun setUserInfo(nombre: String, email: String, profilePicture: String?) {
+        this.nombre.value = nombre
+        this.email.value = email
+        this.profilePicture.value = profilePicture
     }
 
-    fun setEmail(email: String) {
-        _email.value = email
+    fun saveUserInfo(context: Context, nombre: String, email: String, profilePicture: String?) {
+        val sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString("nombre", nombre)
+        editor.putString("email", email)
+        editor.putString("profilePicture", profilePicture)
+        editor.apply()
     }
 
-    fun setFotoPerfil(fotoPerfil: String) {
-        _fotoPerfil.value = fotoPerfil
+    fun loadUserInfo(context: Context) {
+        val sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        nombre.value = sharedPreferences.getString("nombre", "")
+        email.value = sharedPreferences.getString("email", "")
+        profilePicture.value = sharedPreferences.getString("profilePicture", "")
+    }
+
+    fun clearUserInfo(context: Context) {
+        val sharedPreferences = context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.clear()
+        editor.apply()
     }
 }

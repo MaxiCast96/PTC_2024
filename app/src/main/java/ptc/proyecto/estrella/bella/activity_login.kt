@@ -147,9 +147,10 @@ class activity_login : AppCompatActivity() {
                         verificarCredenciales(correo, contraseña)
                     }
                     if (user != null) {
-                        userViewModel.setNombre(user.nombre)
-                        userViewModel.setEmail(user.email)
-                        userViewModel.setFotoPerfil(user.fotoPerfil.toString())
+                        userViewModel.setUserInfo(user.nombre, user.email, user.fotoPerfil)
+
+                        // Guarda la información del usuario en SharedPreferences
+                        userViewModel.saveUserInfo(applicationContext, user.nombre, user.email, user.fotoPerfil)
 
                         val intent = Intent(this@activity_login, MainActivity::class.java)
                         startActivity(intent)

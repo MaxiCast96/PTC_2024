@@ -39,28 +39,10 @@
             android:padding="16dp">
 
             <TextView
-                android:id="@+id/labelReservaId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Reserva ID:"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/txtReservaId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="ID"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp"
-                android:layout_marginTop="4dp" />
-
-            <TextView
                 android:id="@+id/labelUsuarioId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Usuario ID:"
+                android:text="Usuario:"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -76,23 +58,60 @@
                 android:layout_marginTop="4dp" />
 
             <TextView
-                android:id="@+id/labelFuncionId"
+                android:id="@+id/labelPeliculaId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Función ID:"
+                android:text="Pelicula:"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:layout_marginTop="16dp" />
 
             <TextView
-                android:id="@+id/txtFuncionId"
+                android:id="@+id/txtPeliculaId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="ID"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:layout_marginTop="4dp" />
+
+            <TextView
+                android:id="@+id/labelSalaId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sala:"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtSalaId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="ID"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/labelHoraFuncion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Hora de función:"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtHoraFuncion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Hora"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/labelFechaReserva"
@@ -132,24 +151,6 @@
                 android:textSize="16sp"
                 android:layout_marginTop="4dp" />
 
-            <TextView
-                android:id="@+id/labelMetodoPago"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Método de Pago:"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_marginTop="16dp" />
-
-            <TextView
-                android:id="@+id/txtMetodoPago"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Método"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp"
-                android:layout_marginTop="4dp" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

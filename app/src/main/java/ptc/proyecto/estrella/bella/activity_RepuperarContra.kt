@@ -3,6 +3,7 @@ package ptc.proyecto.estrella.bella
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -37,7 +38,7 @@ class activity_RepuperarContra : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        correoUsuario = intent.getStringExtra("correo_usuario").orEmpty()
+        correoUsuario = intent.getStringExtra("correo").orEmpty()
 
         val navView: BottomNavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
@@ -57,15 +58,12 @@ class activity_RepuperarContra : AppCompatActivity() {
             insets
         }
 
-        // Obtener referencias a los elementos de la UI
-
         val btnCambiarContraseña: Button = findViewById(R.id.btnCambiarContraseña)
         val txtNuevaContraseña = findViewById<TextInputLayout>(R.id.txtNuevaContraseña)
         val txtRecuperarNuevaContraseña = findViewById<TextInputLayout>(R.id.txtRecuperarNuevaContraseña)
 
-        //hacer que al tocar cualquier parte de la pantalla se deseleccionen los edit text
+        // Hacer que al tocar cualquier parte de la pantalla se deseleccionen los EditText
         val rootLayout = findViewById<ConstraintLayout>(R.id.main)
-
         rootLayout.setOnTouchListener { v, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 currentFocus?.let { view ->
@@ -91,7 +89,6 @@ class activity_RepuperarContra : AppCompatActivity() {
                         val intent = Intent(this@activity_RepuperarContra, activity_login::class.java)
                         startActivity(intent)
                     } else {
-                        // Manejar el error, por ejemplo, mostrando un mensaje al usuario
                         Toast.makeText(this@activity_RepuperarContra, "Error al actualizar la contraseña", Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -145,11 +142,12 @@ class activity_RepuperarContra : AppCompatActivity() {
                 val preparedStatement: PreparedStatement = conexion.prepareStatement(query)
                 preparedStatement.setString(1, nuevaContraseña)
                 preparedStatement.setString(2, correo)
+                Log.d("RecuperarContra","Este es el correo que usaré para cambiar la contraseña: $correo")
                 preparedStatement.executeUpdate()
 
                 val commitQuery = "COMMIT"
-                val statement = conexion.createStatement()
-                statement.execute(commitQuery) // Ejecutar el commit
+                val statement = conexion.prepareStatement(commitQuery)
+                statement.executeUpdate()
 
                 preparedStatement.close()
                 conexion.close()
