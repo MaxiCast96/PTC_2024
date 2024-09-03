@@ -5,8 +5,8 @@ Base de datos del proyecto:
 ALTER SESSION SET "_ORACLE_SCRIPT" = TRUE;
 
 -- Crear usuario y otorgarle permisos de conexión
-CREATE USER ANDRE_DEVELOPER IDENTIFIED BY "1234";
-GRANT CONNECT TO ANDRE_DEVELOPER;
+CREATE USER CinemaNOW IDENTIFIED BY "Estrella_Bella!";
+GRANT CONNECT TO `CinemaNOW;
 
 -- Crear secuencias para AUTO_INCREMENT
 CREATE SEQUENCE roles_seq START WITH 1 INCREMENT BY 1;
@@ -149,7 +149,7 @@ CREATE TABLE Funciones (
     CONSTRAINT fk_funciones_sala_id FOREIGN KEY (sala_id) REFERENCES Salas_PTC(sala_id),
     CONSTRAINT fk_funciones_tipo_id FOREIGN KEY (tipo_id) REFERENCES TipoFuncion(tipo_id),
     CONSTRAINT fk_funciones_idioma_id FOREIGN KEY (idioma_id) REFERENCES IdiomaFuncion(idioma_id),
-    CONSTRAINT fk_funciones_horario_id FOREIGN KEY (funcion_id) REFERENCES Horario_Funcion(horario_id)
+    CONSTRAINT fk_funciones_horario_id FOREIGN KEY (horario_id) REFERENCES Horario_Funcion(horario_id)
 );
 
 INSERT INTO Funciones (funcion_id, pelicula_id, sala_id, fecha_hora, tipo_id, idioma_id, horario_id)
@@ -395,4 +395,12 @@ DROP SEQUENCE reservas_ptc_seq;
 DROP SEQUENCE detalles_reservas_seq;
 DROP SEQUENCE estado_asientos_seq;
 DROP SEQUENCE estado_disponible_ocupado_seq;
+
+
+--Usuario de Prueba--
+INSERT INTO Usuarios (usuario_id, nombre, email, contraseña, rol_id, foto_perfil)
+VALUES (usuarios_seq.NEXTVAL, 'LoginTest', 'logintest@gmail.com', 'LoginTest', 3, 'Placeholder Foto');
+
+SELECT * FROM Usuarios WHERE email = 'logintest@gmail.com' AND contraseña = 'LoginTest';
+
 ```
