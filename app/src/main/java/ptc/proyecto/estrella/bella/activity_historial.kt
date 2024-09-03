@@ -71,7 +71,6 @@ class activity_historial : AppCompatActivity() {
                 val Adaptador = Adaptador(ejecutarFuncion, this)
                 findViewById<RecyclerView>(R.id.rcvHistorial).adapter = Adaptador
 
-                // Mostrar u ocultar el mensaje según si hay tickets o no
                 if (ejecutarFuncion.isEmpty()) {
                     findViewById<TextView>(R.id.textView3).visibility = View.VISIBLE
                 } else {

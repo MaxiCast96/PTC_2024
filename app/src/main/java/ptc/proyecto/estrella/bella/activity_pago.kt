@@ -19,14 +19,13 @@ class activity_pago : AppCompatActivity() {
         val imgAtrasPago = findViewById<ImageView>(R.id.imgAtrasPago)
         val btnPagar = findViewById<Button>(R.id.btnPagar)
 
-        // Obtén el TextInputEditText a través de su TextInputLayout
         val txtNumeroTarjeta = findViewById<TextInputLayout>(R.id.txtNumeroTarjeta).editText as TextInputEditText
         val txtRepresentante = findViewById<TextInputLayout>(R.id.txtRepresentante).editText as TextInputEditText
         val txtCVV = findViewById<TextInputLayout>(R.id.txtCVV).editText as TextInputEditText
         val txtCodigoPostal = findViewById<TextInputLayout>(R.id.txtCodigoPostal).editText as TextInputEditText
         val txtFechaCaducidad = findViewById<TextInputLayout>(R.id.txtFechaCaducidad).editText as TextInputEditText
 
-        // Formato automático de la fecha MM/AA
+        //Fecha MM/AA
         txtFechaCaducidad.addTextChangedListener(object : TextWatcher {
             private var isUpdating = false
             private val dividerChar = '/'
@@ -47,6 +46,32 @@ class activity_pago : AppCompatActivity() {
                 } else if (length > 2 && !s.toString().contains(dividerChar.toString())) {
                     s?.insert(2, dividerChar.toString())
                 }
+
+                isUpdating = false
+            }
+        })
+
+        txtNumeroTarjeta.addTextChangedListener(object : TextWatcher {
+            private var isUpdating: Boolean = false
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                if (isUpdating) return
+
+                isUpdating = true
+                val original = s.toString().replace("-", "")
+                val formattedString = StringBuilder()
+
+                for (i in original.indices) {
+                    if (i > 0 && i % 4 == 0) {
+                        formattedString.append('-')
+                    }
+                    formattedString.append(original[i])
+                }
+                s?.replace(0, s.length, formattedString)
 
                 isUpdating = false
             }
@@ -95,7 +120,7 @@ class activity_pago : AppCompatActivity() {
             isValid = false
         }
 
-        if (fechaCaducidad.text.isNullOrEmpty() || !fechaCaducidad.text?.matches(Regex("^(0[1-9]|1[0-2])/$2\$"))!!) {
+        if (fechaCaducidad.text.isNullOrEmpty()) {
             fechaCaducidad.error = "Fecha de caducidad inválida (MM/AA)"
             isValid = false
         }

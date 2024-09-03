@@ -22,7 +22,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Cargar la información del usuario desde SharedPreferences
         userViewModel.loadUserInfo(this)
 
         val navView: BottomNavigationView = binding.navView

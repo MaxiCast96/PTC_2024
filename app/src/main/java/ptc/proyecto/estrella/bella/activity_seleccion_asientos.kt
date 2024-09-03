@@ -1,6 +1,5 @@
 package ptc.proyecto.estrella.bella
 
-
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -8,13 +7,9 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import modelo.ClaseConexion
 import modelo.listaAseintos
-import modelo.listaHorarioFunciones
 import modelo.listaSalas_PTC
 
 class activity_seleccion_asientos : AppCompatActivity() {
@@ -24,9 +19,12 @@ class activity_seleccion_asientos : AppCompatActivity() {
         lateinit var numero: String
     }
 
+    private var listaSalasGlobal: List<listaSalas_PTC> = emptyList()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_seleccion_asientos)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -38,23 +36,23 @@ class activity_seleccion_asientos : AppCompatActivity() {
         val spSeleccionarAsientos = findViewById<Spinner>(R.id.spSeleccionarAsientos)
         val imgAtrasSalas = findViewById<ImageView>(R.id.imgAtrasSalas)
 
-        // Inicialmente deshabilitamos el spinner de asientos y el botón
+        val peliculaId = intent.getIntExtra("PELICULA_ID", 0)
+        val horaSeleccionada = intent.getStringExtra("HORA_SELECCIONADA")
+
         spSeleccionarAsientos.isEnabled = false
         btnContinuarAlPago.isEnabled = false
 
         imgAtrasSalas.setOnClickListener {
-            val intent = Intent(this, detalle_horarios::class.java)
-            startActivity(intent)
+            onBackPressedDispatcher.onBackPressed()
         }
 
-        fun obtenerSalaPTC(): List<listaSalas_PTC> {
+        suspend fun obtenerSalaPTC(): List<listaSalas_PTC> = withContext(Dispatchers.IO) {
             val listaSalas = mutableListOf<listaSalas_PTC>()
-
             try {
                 val objConexion = ClaseConexion().cadenaConexion()
                 if (objConexion != null) {
                     val statement = objConexion.createStatement()
-                    val resultSet = statement.executeQuery("select * from Salas_PTC")
+                    val resultSet = statement.executeQuery("SELECT * FROM Salas_PTC")
 
                     while (resultSet.next()) {
                         val sala_id = resultSet.getInt("sala_id")
@@ -67,84 +65,102 @@ class activity_seleccion_asientos : AppCompatActivity() {
                     statement.close()
                     objConexion.close()
                 } else {
-                    // Manejo de error cuando la conexión es null
-                    runOnUiThread {
-                        Toast.makeText(this@activity_seleccion_asientos, "Error al conectar con la base de datos", Toast.LENGTH_SHORT).show()
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            this@activity_seleccion_asientos,
+                            "Error al conectar con la base de datos",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             } catch (e: Exception) {
-                // Manejo de cualquier otra excepción
                 e.printStackTrace()
-                runOnUiThread {
-                    Toast.makeText(this@activity_seleccion_asientos, "Error al obtener salas: ${e.message}", Toast.LENGTH_SHORT).show()
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        this@activity_seleccion_asientos,
+                        "Error al obtener salas: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
-
-            return listaSalas
+            listaSalas
         }
-
-        fun obtenerListaAsientos(salaId: Int): List<listaAseintos> {
+        //Obtener los asientos
+        suspend fun obtenerListaAsientos(salaId: Int): List<listaAseintos> = withContext(Dispatchers.IO) {
             val listaAsientos = mutableListOf<listaAseintos>()
-
             try {
                 val objConexion = ClaseConexion().cadenaConexion()
-                if (objConexion == null) {
-                    Toast.makeText(this@activity_seleccion_asientos, "Error al conectar con la base de datos", Toast.LENGTH_SHORT).show()
-                    return listaAsientos
+                if (objConexion != null) {
+                    val statement = objConexion.createStatement()
+                    val resultSet = statement.executeQuery("SELECT * FROM Asientos WHERE sala_id = $salaId AND ocupado = 0")
+
+                    while (resultSet.next()) {
+                        val asiento_id = resultSet.getInt("asiento_id")
+                        val fila = resultSet.getString("fila")
+                        val numero = resultSet.getInt("numero")
+                        listaAsientos.add(listaAseintos(asiento_id, salaId, fila, numero))
+                    }
+
+                    resultSet.close()
+                    statement.close()
+                    objConexion.close()
+                } else {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            this@activity_seleccion_asientos,
+                            "Error al conectar con la base de datos",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
-
-                val statement = objConexion.createStatement()
-                val resultSet = statement.executeQuery("SELECT * FROM Asientos WHERE sala_id = $salaId")
-
-                while (resultSet.next()) {
-                    val asiento_id = resultSet.getInt("asiento_id")
-                    val fila = resultSet.getString("fila")
-                    val numero = resultSet.getInt("numero")
-                    listaAsientos.add(listaAseintos(asiento_id, salaId, fila, numero))
-                }
-
-                resultSet.close()
-                statement.close()
-                objConexion.close()
-
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(this@activity_seleccion_asientos, "Error al cargar los asientos: ${e.message}", Toast.LENGTH_SHORT).show()
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        this@activity_seleccion_asientos,
+                        "Error al cargar los asientos: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
-
-            return listaAsientos
+            listaAsientos
         }
 
-        // Cargar las salas en el spinner
-        CoroutineScope(Dispatchers.IO).launch {
-            val listaSalas = obtenerSalaPTC()
-            val nombresSalas = listaSalas.map { it.nombre }
+        // Cargar salas en spinner
+        CoroutineScope(Dispatchers.Main).launch {
+            listaSalasGlobal = obtenerSalaPTC()
+            val nombresSalas = mutableListOf<String>()
+            // Opción predeterminada
+            nombresSalas.add("Elige una opción")
+            nombresSalas.addAll(listaSalasGlobal.map { it.nombre })
 
-            withContext(Dispatchers.Main) {
-                val miAdaptador = ArrayAdapter(this@activity_seleccion_asientos, android.R.layout.simple_spinner_dropdown_item, nombresSalas)
-                spSeleccionarSala.adapter = miAdaptador
-            }
+            val miAdaptador = ArrayAdapter(
+                this@activity_seleccion_asientos,
+                android.R.layout.simple_spinner_dropdown_item,
+                nombresSalas
+            )
+            spSeleccionarSala.adapter = miAdaptador
         }
-
-        // Manejo del evento de selección de sala
+        //selección de sala
         spSeleccionarSala.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val salaSeleccionada = spSeleccionarSala.selectedItem.toString()
-
-                // Habilitar el spinner de asientos si se selecciona una sala válida
                 if (salaSeleccionada != "Elige una opción") {
-                    val salaId = obtenerSalaPTC().find { it.nombre == salaSeleccionada }?.sala_id ?: -1
-
+                    val salaId = listaSalasGlobal.find { it.nombre == salaSeleccionada }?.sala_id ?: -1
                     // Cargar los asientos correspondientes a la sala seleccionada
-                    CoroutineScope(Dispatchers.IO).launch {
+                    CoroutineScope(Dispatchers.Main).launch {
                         val listaAsientos = obtenerListaAsientos(salaId)
                         val asientos = listaAsientos.map { "${it.fila} ${it.numero}" }
 
-                        withContext(Dispatchers.Main) {
-                            val adaptadorAsientos = ArrayAdapter(this@activity_seleccion_asientos, android.R.layout.simple_spinner_dropdown_item, asientos)
-                            spSeleccionarAsientos.adapter = adaptadorAsientos
-                            spSeleccionarAsientos.isEnabled = true
-                        }
+                        val adaptadorAsientos = ArrayAdapter(
+                            this@activity_seleccion_asientos,
+                            android.R.layout.simple_spinner_dropdown_item,
+                            asientos
+                        )
+                        // Deshabilitar hasta que se seleccione un asiento
+                        spSeleccionarAsientos.adapter = adaptadorAsientos
+                        spSeleccionarAsientos.isEnabled = true
+                        btnContinuarAlPago.isEnabled = false
                     }
                 } else {
                     spSeleccionarAsientos.isEnabled = false
@@ -155,42 +171,82 @@ class activity_seleccion_asientos : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
-        // Manejo del evento de selección de asiento
+        //Selección de asiento
         spSeleccionarAsientos.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val asientoSeleccionado = spSeleccionarAsientos.selectedItem.toString()
-
-                // Habilitar el botón "Continuar" si se ha seleccionado un asiento válido
-                btnContinuarAlPago.isEnabled = asientoSeleccionado != "Elige una opción"
+                btnContinuarAlPago.isEnabled = asientoSeleccionado != "Elige una opción" && asientoSeleccionado.isNotBlank()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
-        // Acción del botón Continuar
         btnContinuarAlPago.setOnClickListener {
-            // Actualizar el asiento como ocupado en la base de datos
-            CoroutineScope(Dispatchers.IO).launch {
-                val salaSeleccionada = spSeleccionarSala.selectedItem.toString()
-                val asientoSeleccionado = spSeleccionarAsientos.selectedItem.toString()
+            val salaSeleccionada = spSeleccionarSala.selectedItem.toString()
+            val asientoSeleccionado = spSeleccionarAsientos.selectedItem.toString()
 
-                val salaId = obtenerSalaPTC().find { it.nombre == salaSeleccionada }?.sala_id ?: -1
+            if (salaSeleccionada != "Elige una opción" && asientoSeleccionado.isNotBlank()) {
                 val filaNumero = asientoSeleccionado.split(" ")
-                fila = filaNumero[0]
-                numero = filaNumero[1]
+                if (filaNumero.size == 2) {
+                    val filaSeleccionada = filaNumero[0]
+                    val numeroSeleccionado = filaNumero[1].toIntOrNull()
+                    if (numeroSeleccionado != null) {
+                        // Actualizar el asiento
+                        CoroutineScope(Dispatchers.Main).launch {
+                            actualizarAsientoOcupado(salaSeleccionada, filaSeleccionada, numeroSeleccionado)
+                        }
+                    } else {
+                        Toast.makeText(this, "Número de asiento inválido", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(this, "Formato de asiento inválido", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(this, "Selecciona una sala y un asiento válidos", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+    // Función para actualizar el asiento como ocupado
+    private suspend fun actualizarAsientoOcupado(salaNombre: String, fila: String, numero: Int) = withContext(Dispatchers.IO) {
+        try {
+            // Obtener el salaId
+            val salaId = listaSalasGlobal.find { it.nombre == salaNombre }?.sala_id ?: -1
+            if (salaId == -1) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@activity_seleccion_asientos, "Sala no encontrada", Toast.LENGTH_SHORT).show()
+                }
+                return@withContext
+            }
 
-                val objConexion = ClaseConexion().cadenaConexion()
-                val statement = objConexion?.prepareStatement("UPDATE Asientos SET ocupado = 1 WHERE sala_id = ? AND fila = ? AND numero = ?")
-                statement?.setInt(1, salaId)
-                statement?.setString(2, fila)
-                statement?.setString(3, numero)
-                statement?.executeUpdate()
+            val objConexion = ClaseConexion().cadenaConexion()
+            if (objConexion != null) {
+                val query = "UPDATE Asientos SET ocupado = 1 WHERE sala_id = ? AND fila = ? AND numero = ?"
+                val statement = objConexion.prepareStatement(query)
+                statement.setInt(1, salaId)
+                statement.setString(2, fila)
+                statement.setInt(3, numero)
+                val filasActualizadas = statement.executeUpdate()
+
+                statement.close()
+                objConexion.close()
 
                 withContext(Dispatchers.Main) {
-                    // Navegar a la pantalla de pago
-                    val intent = Intent(this@activity_seleccion_asientos, activity_pago::class.java)
-                    startActivity(intent)
+                    if (filasActualizadas > 0) {
+                        val intent = Intent(this@activity_seleccion_asientos, activity_pago::class.java)
+                        startActivity(intent)
+                    } else {
+                        Toast.makeText(this@activity_seleccion_asientos, "No se pudo actualizar el asiento", Toast.LENGTH_SHORT).show()
+                    }
                 }
+            } else {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@activity_seleccion_asientos, "Error al conectar con la base de datos", Toast.LENGTH_SHORT).show()
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            withContext(Dispatchers.Main) {
+                Toast.makeText(this@activity_seleccion_asientos, "Error al actualizar el asiento: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }

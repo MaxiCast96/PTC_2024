@@ -42,7 +42,12 @@ class detalle_horarios : AppCompatActivity() {
         val trailer = intent.getStringExtra("TRAILER")
 
         btnReservarEntradas.setOnClickListener {
-            val intent = Intent(this, activity_seleccion_asientos::class.java)
+            val horaSeleccionada = spDetalleHorario.selectedItem.toString()
+
+            val intent = Intent(this, activity_seleccion_asientos::class.java).apply {
+                putExtra("PELICULA_ID", peliculaId)
+                putExtra("HORA_SELECCIONADA", horaSeleccionada)
+            }
             startActivity(intent)
         }
         // Muestra los datos en la UI
@@ -63,7 +68,6 @@ class detalle_horarios : AppCompatActivity() {
         fun obtenerHorarioFuncion(): List<listaHorarioFunciones>{
             val objConexion = ClaseConexion().cadenaConexion()
 
-            //Creo un Statement que me ejecutará el select
             val statement = objConexion?.createStatement()
             val resultSet = statement?.executeQuery("select * from Horario_Funcion")!!
 
@@ -78,14 +82,12 @@ class detalle_horarios : AppCompatActivity() {
             return listaHorarioFunciones
         }
 
-        //Programar el spinner para que me muestre los datos del select
+        //spinner
         CoroutineScope(Dispatchers.IO).launch {
-            //1- Obtengo los datos
             val listaHorarioFunciones = obtenerHorarioFuncion()
             val horaFuncion = listaHorarioFunciones.map { it.hora }
 
             withContext(Dispatchers.Main)  {
-                //2- Crear y modificar el adaptador
                 val miAdaptador = ArrayAdapter(this@detalle_horarios, android.R.layout.simple_spinner_dropdown_item, horaFuncion)
                 spDetalleHorario.adapter = miAdaptador
             }

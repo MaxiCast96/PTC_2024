@@ -38,7 +38,6 @@ class activity_RepuperarContra : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Recibiendo el correo pasado desde la actividad anterior
         correoUsuario = intent.getStringExtra("correo").orEmpty()
 
         val navView: BottomNavigationView = binding.navView
@@ -59,7 +58,6 @@ class activity_RepuperarContra : AppCompatActivity() {
             insets
         }
 
-        // Obtener referencias de la UI
         val btnCambiarContraseña: Button = findViewById(R.id.btnCambiarContraseña)
         val txtNuevaContraseña = findViewById<TextInputLayout>(R.id.txtNuevaContraseña)
         val txtRecuperarNuevaContraseña = findViewById<TextInputLayout>(R.id.txtRecuperarNuevaContraseña)
