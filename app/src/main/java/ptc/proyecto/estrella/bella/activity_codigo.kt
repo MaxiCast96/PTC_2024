@@ -49,7 +49,7 @@ class activity_codigo : AppCompatActivity() {
 
     private fun validarCodigo(): Boolean {
         val codigoIngresado = txtCodigo.editText?.text.toString().trim()
-        val codigoEnviado = intent.getIntExtra("codigo_recuperacion", -1) // Código de recuperación enviado
+        val codigoEnviado = intent.getIntExtra("codigo_recuperacion", -1)
 
         return when {
             codigoIngresado.isEmpty() -> {

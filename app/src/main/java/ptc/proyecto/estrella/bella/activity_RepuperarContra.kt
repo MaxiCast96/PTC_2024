@@ -62,7 +62,6 @@ class activity_RepuperarContra : AppCompatActivity() {
         val txtNuevaContraseña = findViewById<TextInputLayout>(R.id.txtNuevaContraseña)
         val txtRecuperarNuevaContraseña = findViewById<TextInputLayout>(R.id.txtRecuperarNuevaContraseña)
 
-        // Hacer que al tocar cualquier parte de la pantalla se deseleccionen los EditText
         val rootLayout = findViewById<ConstraintLayout>(R.id.main)
         rootLayout.setOnTouchListener { v, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {

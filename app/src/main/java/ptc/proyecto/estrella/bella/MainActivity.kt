@@ -14,7 +14,7 @@ import ptc.proyecto.estrella.bella.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val userViewModel: UserViewModel by viewModels()
+    val userViewModel: UserViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +23,22 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         userViewModel.loadUserInfo(this)
+
+        val fragmentToOpen = intent.getStringExtra("openFragment")
+
+        if (fragmentToOpen == "fragment_usuario") {
+            // Aquí agregas el código para abrir el fragment_usuario
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_main, fragment_usuario())
+                .commit()
+        }
+
+        if (fragmentToOpen == "fragment_historial") {
+            // Aquí agregas el código para abrir el fragment_usuario
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_main, fragment_historial())
+                .commit()
+        }
 
         val navView: BottomNavigationView = binding.navView
 

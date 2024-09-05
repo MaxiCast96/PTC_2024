@@ -85,7 +85,7 @@ class activity_seleccion_asientos : AppCompatActivity() {
             }
             listaSalas
         }
-        //Obtener los asientos
+
         suspend fun obtenerListaAsientos(salaId: Int): List<listaAseintos> = withContext(Dispatchers.IO) {
             val listaAsientos = mutableListOf<listaAseintos>()
             try {
@@ -126,11 +126,9 @@ class activity_seleccion_asientos : AppCompatActivity() {
             listaAsientos
         }
 
-        // Cargar salas en spinner
         CoroutineScope(Dispatchers.Main).launch {
             listaSalasGlobal = obtenerSalaPTC()
             val nombresSalas = mutableListOf<String>()
-            // Opción predeterminada
             nombresSalas.add("Elige una opción")
             nombresSalas.addAll(listaSalasGlobal.map { it.nombre })
 
@@ -141,7 +139,7 @@ class activity_seleccion_asientos : AppCompatActivity() {
             )
             spSeleccionarSala.adapter = miAdaptador
         }
-        //selección de sala
+
         spSeleccionarSala.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val salaSeleccionada = spSeleccionarSala.selectedItem.toString()
@@ -171,7 +169,6 @@ class activity_seleccion_asientos : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
-        //Selección de asiento
         spSeleccionarAsientos.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val asientoSeleccionado = spSeleccionarAsientos.selectedItem.toString()
@@ -191,7 +188,6 @@ class activity_seleccion_asientos : AppCompatActivity() {
                     val filaSeleccionada = filaNumero[0]
                     val numeroSeleccionado = filaNumero[1].toIntOrNull()
                     if (numeroSeleccionado != null) {
-                        // Actualizar el asiento
                         CoroutineScope(Dispatchers.Main).launch {
                             actualizarAsientoOcupado(salaSeleccionada, filaSeleccionada, numeroSeleccionado)
                         }
@@ -206,10 +202,9 @@ class activity_seleccion_asientos : AppCompatActivity() {
             }
         }
     }
-    // Función para actualizar el asiento como ocupado
+
     private suspend fun actualizarAsientoOcupado(salaNombre: String, fila: String, numero: Int) = withContext(Dispatchers.IO) {
         try {
-            // Obtener el salaId
             val salaId = listaSalasGlobal.find { it.nombre == salaNombre }?.sala_id ?: -1
             if (salaId == -1) {
                 withContext(Dispatchers.Main) {
@@ -232,7 +227,11 @@ class activity_seleccion_asientos : AppCompatActivity() {
 
                 withContext(Dispatchers.Main) {
                     if (filasActualizadas > 0) {
-                        val intent = Intent(this@activity_seleccion_asientos, activity_pago::class.java)
+                        val intent = Intent(this@activity_seleccion_asientos, activity_pago::class.java).apply {
+                            putExtra("PELICULA_ID", intent.getIntExtra("PELICULA_ID", 0)) // Pasar el ID de la película
+                            putExtra("HORA_SELECCIONADA", intent.getStringExtra("HORA_SELECCIONADA")) // Pasar la hora seleccionada
+                            putExtra("SALA_ID", salaId) // Pasar el ID de la sala seleccionada
+                        }
                         startActivity(intent)
                     } else {
                         Toast.makeText(this@activity_seleccion_asientos, "No se pudo actualizar el asiento", Toast.LENGTH_SHORT).show()

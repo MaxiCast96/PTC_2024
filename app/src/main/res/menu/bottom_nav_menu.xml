@@ -3,8 +3,8 @@
 
     <item
         android:id="@+id/navigation_home"
-        android:icon="@drawable/ic_home_black_24dp"
-        android:title="Inicio" />
+        android:icon="@drawable/ic_cartelera"
+        android:title="Cartelera" />
 
     <item
         android:id="@+id/fragment_historial"

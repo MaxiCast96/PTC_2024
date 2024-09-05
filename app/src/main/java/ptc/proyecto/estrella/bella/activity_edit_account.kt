@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.google.firebase.storage.FirebaseStorage
@@ -45,7 +46,6 @@ class activity_edit_account : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_account)
-        //Firebase
         storageReference = FirebaseStorage.getInstance().reference
         // Obtener referencias de la UI
         val lblNombre = findViewById<TextView>(R.id.lblNombre)
@@ -72,8 +72,8 @@ class activity_edit_account : AppCompatActivity() {
 
         imgEditNombre.setOnClickListener {
             showEditDialog("nombre", lblNombre.text.toString()) { nuevoNombre ->
-                userViewModel.setUserInfo(nuevoNombre, userViewModel.email.value ?: "", userViewModel.profilePicture.value)
-                userViewModel.saveUserInfo(this, nuevoNombre, userViewModel.email.value ?: "", userViewModel.profilePicture.value)
+                userViewModel.setUserInfo(nuevoNombre, userViewModel.email.value ?: "", userViewModel.profilePicture.value, userViewModel.uuid.value ?: "")
+                userViewModel.saveUserInfo(this, nuevoNombre, userViewModel.email.value ?: "", userViewModel.profilePicture.value, userViewModel.uuid.value ?: "")
                 lblNombre.text = nuevoNombre
 
                 lifecycleScope.launch {
@@ -84,8 +84,8 @@ class activity_edit_account : AppCompatActivity() {
 
         imgEditCorreo.setOnClickListener {
             showEditDialog("correo", lblEmail.text.toString()) { nuevoCorreo ->
-                userViewModel.setUserInfo(userViewModel.nombre.value ?: "", nuevoCorreo, userViewModel.profilePicture.value)
-                userViewModel.saveUserInfo(this, userViewModel.nombre.value ?: "", nuevoCorreo, userViewModel.profilePicture.value)
+                userViewModel.setUserInfo(userViewModel.nombre.value ?: "", nuevoCorreo, userViewModel.profilePicture.value, userViewModel.uuid.value ?: "")
+                userViewModel.saveUserInfo(this, userViewModel.nombre.value ?: "", nuevoCorreo, userViewModel.profilePicture.value, userViewModel.uuid.value ?: "")
                 lblEmail.text = nuevoCorreo
 
                 lifecycleScope.launch {
@@ -106,6 +106,11 @@ class activity_edit_account : AppCompatActivity() {
                             actualizarUsuarioEnBaseDeDatos("email", nuevoCorreo)
                             actualizarUsuarioEnBaseDeDatos("foto_perfil", imageUrl)
                             Toast.makeText(this@activity_edit_account, "Cambios guardados", Toast.LENGTH_SHORT).show()
+
+                            val intent = Intent(this@activity_edit_account, MainActivity::class.java)
+                            intent.putExtra("openFragment", "fragment_usuario")
+                            startActivity(intent)
+                            finish()
                         } catch (e: Exception) {
                             withContext(Dispatchers.Main) {
                                 Toast.makeText(this@activity_edit_account, "Error: ${e.message}", Toast.LENGTH_LONG).show()
@@ -119,6 +124,12 @@ class activity_edit_account : AppCompatActivity() {
                         actualizarUsuarioEnBaseDeDatos("nombre", nuevoNombre)
                         actualizarUsuarioEnBaseDeDatos("email", nuevoCorreo)
                         Toast.makeText(this@activity_edit_account, "Cambios guardados", Toast.LENGTH_SHORT).show()
+
+
+                        val intent = Intent(this@activity_edit_account, MainActivity::class.java)
+                        intent.putExtra("openFragment", "fragment_usuario")
+                        startActivity(intent)
+                        finish()
                     } catch (e: Exception) {
                         withContext(Dispatchers.Main) {
                             Toast.makeText(this@activity_edit_account, "Error: ${e.message}", Toast.LENGTH_LONG).show()
@@ -127,6 +138,7 @@ class activity_edit_account : AppCompatActivity() {
                 }
             }
         }
+
 
         // Actualizar la UI cuando los datos cambian
         userViewModel.nombre.observe(this, { nombre ->
@@ -187,10 +199,10 @@ class activity_edit_account : AppCompatActivity() {
         withContext(Dispatchers.IO) {
             val conexion: Connection? = ClaseConexion().cadenaConexion()
             if (conexion != null) {
-                val query = "UPDATE usuarios SET $campo = ? WHERE email = ?"
+                val query = "UPDATE usuarios SET $campo = ? WHERE usuario_id = ?"
                 val preparedStatement: PreparedStatement = conexion.prepareStatement(query)
                 preparedStatement.setString(1, nuevoValor)
-                preparedStatement.setString(2, userViewModel.email.value ?: "")
+                preparedStatement.setString(2, userViewModel.uuid.value ?: "")
                 preparedStatement.executeUpdate()
 
                 val commitQuery = "COMMIT"

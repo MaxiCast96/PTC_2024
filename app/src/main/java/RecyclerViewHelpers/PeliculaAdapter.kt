@@ -9,6 +9,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import modelo.Pelicula
 import ptc.proyecto.estrella.bella.R
 import ptc.proyecto.estrella.bella.detalle_horarios
@@ -21,6 +24,7 @@ class PeliculaAdapter(
     inner class PeliculaViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val posterImageView: ImageView = itemView.findViewById(R.id.posterImageView)
         val tituloTextView: TextView = itemView.findViewById(R.id.tituloTextView)
+
 
         init {
             itemView.setOnClickListener {
@@ -51,8 +55,13 @@ class PeliculaAdapter(
     override fun onBindViewHolder(holder: PeliculaViewHolder, position: Int) {
         val pelicula = peliculas[position]
         holder.tituloTextView.text = pelicula.titulo
+
+        val requestOptions = RequestOptions()
+            .transform(CenterCrop())
+
         Glide.with(holder.itemView.context)
             .load(pelicula.poster)
+            .apply(requestOptions)
             .into(holder.posterImageView)
     }
 

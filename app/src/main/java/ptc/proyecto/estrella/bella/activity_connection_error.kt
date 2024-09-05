@@ -36,12 +36,12 @@ class activity_connection_error : AppCompatActivity() {
 
             GlobalScope.launch(Dispatchers.IO) {
                 val conexion = withContext(Dispatchers.IO) {
-                    withTimeoutOrNull(5000) { // Timeout de 5 segundos
+                    withTimeoutOrNull(5000) {
                         ClaseConexion().cadenaConexion()
                     }
                 }
 
-                // Manipulación de la UI debe hacerse en el hilo principal, si, te estoy hablando a ti guille
+
                 withContext(Dispatchers.Main) {
                     if (conexion != null) {
                         val intent = Intent(this@activity_connection_error, activity_login::class.java)

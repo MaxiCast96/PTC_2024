@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.util.Patterns
 import android.view.MotionEvent
 import android.view.View
@@ -18,7 +19,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -31,8 +31,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import ptc.proyecto.estrella.bella.databinding.ActivityMainBinding
 import modelo.ClaseConexion
+import ptc.proyecto.estrella.bella.databinding.ActivityMainBinding
 import java.security.MessageDigest
 import java.sql.Connection
 import java.sql.PreparedStatement
@@ -147,10 +147,9 @@ class activity_login : AppCompatActivity() {
                         verificarCredenciales(correo, contraseña)
                     }
                     if (user != null) {
-                        userViewModel.setUserInfo(user.nombre, user.email, user.fotoPerfil)
+                        userViewModel.setUserInfo(user.nombre, user.email, user.fotoPerfil, user.uuid)
 
-                        // Guarda la información del usuario en SharedPreferences
-                        userViewModel.saveUserInfo(applicationContext, user.nombre, user.email, user.fotoPerfil)
+                        userViewModel.saveUserInfo(applicationContext, user.nombre, user.email, user.fotoPerfil, user.uuid)
 
                         val intent = Intent(this@activity_login, MainActivity::class.java)
                         startActivity(intent)
@@ -197,8 +196,16 @@ class activity_login : AppCompatActivity() {
                     if (contraseñaAlmacenada == contraseñaIngresadaEncriptada) {
                         val nombre = resultSet.getString("nombre")
                         val fotoPerfil = resultSet.getString("foto_perfil")
-                        user = Usuario(nombre, correo, contraseñaAlmacenada, fotoPerfil)
+                        val uuid = resultSet.getString("usuario_id")
+
+                        Log.d("Login", "Usuario encontrado: $nombre, $correo, $uuid")
+
+                        user = Usuario(nombre, correo, contraseñaAlmacenada, fotoPerfil, uuid)
+                    } else {
+                        Log.d("Login", "Contraseña incorrecta para el correo: $correo")
                     }
+                } else {
+                    Log.d("Login", "No se encontró ningún usuario con el correo: $correo")
                 }
             }
         } catch (e: Exception) {
@@ -219,4 +226,4 @@ class activity_login : AppCompatActivity() {
     }
 }
 
-data class Usuario(val nombre: String, val email: String, val contraseña: String, val fotoPerfil: String?)
+data class Usuario(val nombre: String, val email: String, val contraseña: String, val fotoPerfil: String?, val uuid:String)
