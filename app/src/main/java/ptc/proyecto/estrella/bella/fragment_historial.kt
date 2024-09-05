@@ -68,14 +68,14 @@ class fragment_historial : Fragment() {
             val conexion: Connection? = ClaseConexion().cadenaConexion()
             if (conexion != null) {
                 val query = """
-                    SELECT r.funcionand_id, u.nombre AS nombre_usuario, p.titulo AS nombre_pelicula, 
-                           s.nombre AS nombre_sala, r.fecha_reserva, r.total_pago
-                    FROM Reservas_Android r 
-                    INNER JOIN Usuarios u ON r.usuario_id = u.usuario_id 
-                    INNER JOIN Peliculas p ON r.pelicula_id = p.pelicula_id 
-                    INNER JOIN Salas_PTC s ON r.sala_id = s.sala_id 
-                    WHERE r.usuario_id = ?
-                """
+                SELECT r.funcionand_id, u.nombre AS nombre_usuario, p.titulo AS nombre_pelicula, 
+                       s.nombre AS nombre_sala, r.fecha_reserva, r.total_pago
+                FROM Reservas_Android r 
+                INNER JOIN Usuarios u ON r.usuario_id = u.usuario_id 
+                INNER JOIN Peliculas p ON r.pelicula_id = p.pelicula_id 
+                INNER JOIN Salas_PTC s ON r.sala_id = s.sala_id 
+                WHERE r.usuario_id = ?
+            """
                 val preparedStatement: PreparedStatement = conexion.prepareStatement(query)
                 preparedStatement.setString(1, usuarioId)
                 val resultSet: ResultSet = preparedStatement.executeQuery()

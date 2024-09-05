@@ -35,6 +35,8 @@ class ReservaAdapter(private val reservas: List<Reserva>) :
         val userViewModel = (holder.itemView.context as MainActivity).userViewModel
         val nombreUsuario = userViewModel.nombre.value ?: "Desconocido"
 
+        println("Reserva en posición $position: ${reserva.nombrePelicula}, Fecha: ${reserva.fechaReserva}")
+
         holder.btnDetalles.setOnClickListener {
             val context = holder.itemView.context
             val intent = Intent(context, activity_detalle_venta::class.java)
