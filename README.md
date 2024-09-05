@@ -397,17 +397,25 @@ INSERT INTO Asientos (asiento_id, sala_id, fila, numero, ocupado)
 VALUES (27, 3, 'D', '3', 1);
 
 --Peliculas--
+--Peliculas--
 insert into peliculas (pelicula_id, titulo, descripcion, duracion, clasificacion_id, genero_id, poster, trailer)
-values (2, 'Garfield', 'descripcion generica de garfield', 10, 1, 1, 'https://imagenes.gatotv.com/categorias/peliculas/posters/garfield_fuera_de_casa.jpg', 'https://www.youtube.com/watch?v=W37DlG1i61s');
+values (2, 'Garfield', 'descripcion generica de garfield', 10, 1, 1, 'https://imagenes.gatotv.com/categorias/peliculas/posters/garfield_fuera_de_casa.jpg', 'https://youtu.be/GeR3YxTv_zU?si=YBbM2Po9JEIpJhSw');
 
 INSERT INTO Peliculas (pelicula_id, titulo, descripcion, duracion, clasificacion_id, genero_id, poster, trailer)
-VALUES (3, 'Spider-Man', 'Película de superhéroes', 120, 3, 3, 'spiderman_poster.jpg', 'spiderman_trailer.mp4');
+VALUES (3, 'Spider-Man', 'Película de superhéroes', 120, 1, 1, 'https://mx.web.img3.acsta.net/pictures/22/12/21/16/31/3659442.jpg', 'https://youtu.be/oBmazlyP220?si=igERMejyVzTnIXMr');
 
 INSERT INTO Peliculas (pelicula_id, titulo, descripcion, duracion, clasificacion_id, genero_id, poster, trailer)
-VALUES (4, 'Inception', 'Película de ciencia ficción', 148, 5, 5, 'inception_poster.jpg', 'inception_trailer.mp4');
+VALUES (4, 'Inception', 'Película de ciencia ficción', 148, 1, 1, 'https://m.media-amazon.com/images/M/MV5BMTM0MjUzNjkwMl5BMl5BanBnXkFtZTcwNjY0OTk1Mw@@._V1_.jpg', 'https://youtu.be/RKUbu1clC2U?si=EaohcEZZMWPm8BPq');
 
 INSERT INTO Peliculas (pelicula_id, titulo, descripcion, duracion, clasificacion_id, genero_id, poster, trailer)
-VALUES (5, 'The Pursuit of Happyness', 'Drama sobre la superación personal', 117, 4, 4, 'happyness_poster.jpg', 'happyness_trailer.mp4');
+VALUES (5, 'En busca de la felicidad', 'Drama sobre la superación personal', 117, 1, 1, 'https://i.pinimg.com/originals/fe/0a/38/fe0a38aa17f750907243efff7866668a.jpg', 'https://youtu.be/rxtGMH7OrLc?si=2F9wfMFQodaoZ7oh');
+
+INSERT INTO Peliculas (pelicula_id, titulo, descripcion, duracion, clasificacion_id, genero_id, poster, trailer)
+VALUES (6, 'Iron-Man 3', 'Drama sobre Tony Stark', 117, 1, 1, 'https://movieposter.gr/4020-large_default/iron-man-3.jpg', 'https://youtu.be/Ga817lEqAoI?si=q8QRXAWzGFlniypd');
+
+INSERT INTO Peliculas (pelicula_id, titulo, descripcion, duracion, clasificacion_id, genero_id, poster, trailer)
+VALUES (7, 'El Sorprendente Hombre-Araña 2', 'Drama sobre Peter Parker y sus flipantes aventuras contra electro', 117, 1, 1, 'https://m.media-amazon.com/images/I/71rRiiZJVRL._AC_UF894,1000_QL80_.jpg', 'https://youtu.be/U7vjPGJ8THU?si=1YGBUD9K1lYZQMDt');
+
 
 -- Inserts para Clasificacion
 INSERT INTO Clasificacion (clasificacion_id, nombre_clasificacion) VALUES (2, 'Comedia');
