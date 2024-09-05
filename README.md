@@ -14,14 +14,10 @@ CREATE TABLE Clasificacion (
     nombre_clasificacion VARCHAR2(20) NOT NULL UNIQUE
 );
 
-insert into Clasificacion values (1, 'terror');
-
 CREATE TABLE GeneroPelicula (
     genero_id INT PRIMARY KEY,
     genero VARCHAR2(25) UNIQUE NOT NULL
 );
-
-Insert into GeneroPelicula values (1, 'terror');
 
 CREATE TABLE Roles (
     rol_id INT PRIMARY KEY,
@@ -147,7 +143,7 @@ CREATE TABLE EstadoAsientos (
 );
 
 CREATE TABLE auditoria (
-    id_auditoria INT PRIMARY KEY AUTO_INCREMENT,
+    id_auditoria INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     tabla_afectada VARCHAR(100),
     accion VARCHAR(10),
     id_registro INT,
@@ -176,7 +172,6 @@ CREATE SEQUENCE seq_funcionand_id START WITH 1 INCREMENT BY 1;
 -- Crear triggers
 
 -- Trigger para registrar en la tabla de auditoría
-DELIMITER $$
 CREATE TRIGGER trigger_insertar_empleado
 AFTER INSERT ON empleados
 FOR EACH ROW
@@ -184,8 +179,7 @@ BEGIN
     -- Registro en la tabla de auditoría
     INSERT INTO auditoria (tabla_afectada, accion, id_registro)
     VALUES ('empleados', 'INSERT', NEW.id_empleado);
-END $$
-DELIMITER ;
+END;
 
 -- Triggers de autoincrement
 CREATE OR REPLACE TRIGGER roles_bir BEFORE INSERT ON Roles FOR EACH ROW
@@ -215,12 +209,6 @@ END;
 CREATE OR REPLACE TRIGGER genero_pelicula_bir BEFORE INSERT ON GeneroPelicula FOR EACH ROW
 BEGIN
     SELECT genero_pelicula_seq.NEXTVAL INTO :NEW.genero_id FROM dual;
-END;
-/
-
-CREATE OR REPLACE TRIGGER poster_pelicula_bir BEFORE INSERT ON PosterPelicula FOR EACH ROW
-BEGIN
-    SELECT poster_pelicula_seq.NEXTVAL INTO :NEW.poster_id FROM dual;
 END;
 /
 
@@ -293,7 +281,6 @@ INSERT INTO Horario_Funcion (horario_id, hora) VALUES (3, '20:00');
 INSERT INTO Horario_Funcion (horario_id, hora) VALUES (4, '00:30');
 INSERT INTO Horario_Funcion (horario_id, hora) VALUES (5, '19:00');
 INSERT INTO Horario_Funcion (horario_id, hora) VALUES (6, '21:30');
-
 
 
 -- Inserta Salas de Prueba
@@ -398,8 +385,8 @@ VALUES (27, 3, 'D', '3', 1);
 
 --Peliculas--
 --Peliculas--
-insert into peliculas (pelicula_id, titulo, descripcion, duracion, clasificacion_id, genero_id, poster, trailer)
-values (2, 'Garfield', 'descripcion generica de garfield', 10, 1, 1, 'https://imagenes.gatotv.com/categorias/peliculas/posters/garfield_fuera_de_casa.jpg', 'https://youtu.be/GeR3YxTv_zU?si=YBbM2Po9JEIpJhSw');
+INSERT INTO peliculas (pelicula_id, titulo, descripcion, duracion, clasificacion_id, genero_id, poster, trailer)
+VALUES (2, 'Garfield', 'descripcion generica de garfield', 10, 1, 1, 'https://imagenes.gatotv.com/categorias/peliculas/posters/garfield_fuera_de_casa.jpg', 'https://youtu.be/GeR3YxTv_zU?si=YBbM2Po9JEIpJhSw');
 
 INSERT INTO Peliculas (pelicula_id, titulo, descripcion, duracion, clasificacion_id, genero_id, poster, trailer)
 VALUES (3, 'Spider-Man', 'Película de superhéroes', 120, 1, 1, 'https://mx.web.img3.acsta.net/pictures/22/12/21/16/31/3659442.jpg', 'https://youtu.be/oBmazlyP220?si=igERMejyVzTnIXMr');
@@ -472,37 +459,29 @@ WHERE r.usuario_id = 'f97e7e53-2568-44a7-bc16-736e97658ac8';
 -- Procedimientos almacenados:
 
 -- Procedimiento almacenado para obtener el listado de empleados con salarios mayores a un valor x
-DELIMITER $$
-CREATE PROCEDURE obtener_empleados_salario_alto (IN salario_minimo DECIMAL(10,2))
+CREATE OR REPLACE PROCEDURE obtener_empleados_salario_alto (IN salario_minimo DECIMAL(10,2))
 BEGIN
     SELECT * FROM empleados WHERE salario > salario_minimo;
-END $$
-DELIMITER ;
+END;
 
 -- Procedimiento almacenado para actualizar el salario de un empleado por su id
-DELIMITER $$
-CREATE PROCEDURE actualizar_salario_empleado (IN id INT, IN nuevo_salario DECIMAL(10,2))
+CREATE OR REPLACE PROCEDURE actualizar_salario_empleado (IN id INT, IN nuevo_salario DECIMAL(10,2))
 BEGIN
     UPDATE empleados SET salario = nuevo_salario WHERE id_empleado = id;
-END $$
-DELIMITER ;
+END;
 
 -- Procedimiento almacenado para eliminar empleados con un salario por debajo de x
-DELIMITER $$
-CREATE PROCEDURE eliminar_empleados_salario_bajo (IN salario_minimo DECIMAL(10,2))
+CREATE OR REPLACE PROCEDURE eliminar_empleados_salario_bajo (IN salario_minimo DECIMAL(10,2))
 BEGIN
     DELETE FROM empleados WHERE salario < salario_minimo;
-END $$
-DELIMITER ;
+END;
 
 
 -- Procedimiento almacenado para auditoría
-DELIMITER $$
-CREATE PROCEDURE listar_acciones_auditoria ()
+CREATE OR REPLACE PROCEDURE listar_acciones_auditoria ()
 BEGIN
     SELECT * FROM auditoria ORDER BY fecha DESC;
-END $$
-DELIMITER ;
+END;
 
 
 -- Destrucción masiva --
@@ -553,6 +532,24 @@ EXECUTE IMMEDIATE 'DROP TRIGGER detalles_reservas_bir';
 EXECUTE IMMEDIATE 'DROP TRIGGER estado_asientos_bir';
 EXECUTE IMMEDIATE 'DROP TRIGGER estado_disponible_ocupado_bir';
 END; /
+
+
+
+--Usuario de Prueba--
+INSERT INTO Usuarios (usuario_id, nombre, email, contraseña, rol_id, foto_perfil)
+VALUES (usuarios_seq.NEXTVAL, 'LoginTest', 'logintest@gmail.com', 'LoginTest', 3, 'Placeholder Foto');
+
+SELECT * FROM Roles;
+
+SELECT * FROM GeneroPelicula;
+
+SELECT * FROM Clasificacion;
+
+SELECT * FROM Usuarios WHERE email = 'logintest@gmail.com' AND contraseña = 'LoginTest';
+
+SELECT nombre FROM Usuarios WHERE email = 'logintest@gmail.com';
+
+SELECT p.pelicula_id, p.titulo, p.descripcion, p.duracion, c.nombre_clasificacion AS clasificacion_nombre, g.genero AS genero_nombre, p.poster, p.trailer FROM Peliculas p JOIN Clasificacion c ON p.clasificacion_id = c.clasificacion_id JOIN GeneroPelicula g ON p.genero_id = g.genero_id;
 
 
 
