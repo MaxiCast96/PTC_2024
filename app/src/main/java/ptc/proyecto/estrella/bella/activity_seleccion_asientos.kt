@@ -145,7 +145,6 @@ class activity_seleccion_asientos : AppCompatActivity() {
                 val salaSeleccionada = spSeleccionarSala.selectedItem.toString()
                 if (salaSeleccionada != "Elige una opción") {
                     val salaId = listaSalasGlobal.find { it.nombre == salaSeleccionada }?.sala_id ?: -1
-                    // Cargar los asientos correspondientes a la sala seleccionada
                     CoroutineScope(Dispatchers.Main).launch {
                         val listaAsientos = obtenerListaAsientos(salaId)
                         val asientos = listaAsientos.map { "${it.fila} ${it.numero}" }
@@ -155,7 +154,6 @@ class activity_seleccion_asientos : AppCompatActivity() {
                             android.R.layout.simple_spinner_dropdown_item,
                             asientos
                         )
-                        // Deshabilitar hasta que se seleccione un asiento
                         spSeleccionarAsientos.adapter = adaptadorAsientos
                         spSeleccionarAsientos.isEnabled = true
                         btnContinuarAlPago.isEnabled = false
@@ -188,9 +186,15 @@ class activity_seleccion_asientos : AppCompatActivity() {
                     val filaSeleccionada = filaNumero[0]
                     val numeroSeleccionado = filaNumero[1].toIntOrNull()
                     if (numeroSeleccionado != null) {
-                        CoroutineScope(Dispatchers.Main).launch {
-                            actualizarAsientoOcupado(salaSeleccionada, filaSeleccionada, numeroSeleccionado)
+                        // Enviar los datos seleccionados a la pantalla de pago
+                        val intent = Intent(this, activity_pago::class.java).apply {
+                            putExtra("PELICULA_ID", peliculaId)
+                            putExtra("HORA_SELECCIONADA", horaSeleccionada)
+                            putExtra("SALA_ID", listaSalasGlobal.find { it.nombre == salaSeleccionada }?.sala_id)
+                            putExtra("FILA_SELECCIONADA", filaSeleccionada)
+                            putExtra("NUMERO_SELECCIONADO", numeroSeleccionado)
                         }
+                        startActivity(intent)
                     } else {
                         Toast.makeText(this, "Número de asiento inválido", Toast.LENGTH_SHORT).show()
                     }
@@ -199,53 +203,6 @@ class activity_seleccion_asientos : AppCompatActivity() {
                 }
             } else {
                 Toast.makeText(this, "Selecciona una sala y un asiento válidos", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    private suspend fun actualizarAsientoOcupado(salaNombre: String, fila: String, numero: Int) = withContext(Dispatchers.IO) {
-        try {
-            val salaId = listaSalasGlobal.find { it.nombre == salaNombre }?.sala_id ?: -1
-            if (salaId == -1) {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@activity_seleccion_asientos, "Sala no encontrada", Toast.LENGTH_SHORT).show()
-                }
-                return@withContext
-            }
-
-            val objConexion = ClaseConexion().cadenaConexion()
-            if (objConexion != null) {
-                val query = "UPDATE Asientos SET ocupado = 1 WHERE sala_id = ? AND fila = ? AND numero = ?"
-                val statement = objConexion.prepareStatement(query)
-                statement.setInt(1, salaId)
-                statement.setString(2, fila)
-                statement.setInt(3, numero)
-                val filasActualizadas = statement.executeUpdate()
-
-                statement.close()
-                objConexion.close()
-
-                withContext(Dispatchers.Main) {
-                    if (filasActualizadas > 0) {
-                        val intent = Intent(this@activity_seleccion_asientos, activity_pago::class.java).apply {
-                            putExtra("PELICULA_ID", intent.getIntExtra("PELICULA_ID", 0)) // Pasar el ID de la película
-                            putExtra("HORA_SELECCIONADA", intent.getStringExtra("HORA_SELECCIONADA")) // Pasar la hora seleccionada
-                            putExtra("SALA_ID", salaId) // Pasar el ID de la sala seleccionada
-                        }
-                        startActivity(intent)
-                    } else {
-                        Toast.makeText(this@activity_seleccion_asientos, "No se pudo actualizar el asiento", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            } else {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@activity_seleccion_asientos, "Error al conectar con la base de datos", Toast.LENGTH_SHORT).show()
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            withContext(Dispatchers.Main) {
-                Toast.makeText(this@activity_seleccion_asientos, "Error al actualizar el asiento: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }

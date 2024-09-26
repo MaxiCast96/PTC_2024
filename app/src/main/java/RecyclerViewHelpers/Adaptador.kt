@@ -29,12 +29,19 @@ class Adaptador(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val Detalles = Datos[position]
-        holder.textView.text = Detalles.reserva_id.toString()
+
+        holder.textView.text = Detalles.reserva_id.toString() // Mostrar el ID en la card, si así lo deseas
 
         holder.btnDetalles.setOnClickListener {
             val context = holder.itemView.context
             val intent = Intent(context, activity_detalle_venta::class.java)
-            intent.putExtra("reserva_id", Detalles.reserva_id)
+            // Pasar todos los datos al Intent
+            intent.putExtra("reservaId", Detalles.reserva_id)
+            intent.putExtra("nombreUsuario", Detalles.usuario_id)
+            intent.putExtra("nombrePelicula", Detalles.funcion_id)
+            intent.putExtra("fechaReserva", Detalles.fecha_reserva) // En milisegundos
+            intent.putExtra("totalPago", Detalles.total_pago)
+
             context.startActivity(intent)
         }
     }

@@ -46,10 +46,11 @@ class ReservaAdapter(private val reservas: List<Reserva>) :
             intent.putExtra("fechaReserva", reserva.fechaReserva.time)
             intent.putExtra("totalPago", reserva.totalPago)
             intent.putExtra("metodoPago", reserva.metodoPago)
-            intent.putExtra("nombreUsuario", nombreUsuario) // Pasar el nombre del usuario
+            intent.putExtra("nombreUsuario", nombreUsuario)
             context.startActivity(intent)
         }
     }
+
 
 
     override fun getItemCount() = reservas.size

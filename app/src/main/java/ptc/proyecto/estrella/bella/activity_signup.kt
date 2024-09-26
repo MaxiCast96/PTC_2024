@@ -283,7 +283,7 @@ class activity_signup : AppCompatActivity() {
         val correo = txtCorreo.editText?.text.toString().trim()
         val contraseña = txtContraseña.editText?.text.toString().trim()
         val contraseñaEncriptada = encriptarSHA256(contraseña)
-        val rolId = 2
+        val rolId = 1
         val uuid = UUID.randomUUID().toString()
         val btnCrearCuenta = findViewById<Button>(R.id.btnCrearCuenta)
         val AnimCarga = findViewById<LottieAnimationView>(R.id.AnimCarga)
