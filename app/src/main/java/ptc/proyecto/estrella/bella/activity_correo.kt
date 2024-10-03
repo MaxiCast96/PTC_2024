@@ -3,9 +3,7 @@ package ptc.proyecto.estrella.bella
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.provider.ContactsContract.CommonDataKinds.Im
 import android.util.Log
-import android.util.Patterns
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -26,7 +24,6 @@ import kotlinx.coroutines.withContext
 import modelo.ClaseConexion
 import ptc.proyecto.estrella.bella.ui.enviarCorreo
 import ptc.proyecto.estrella.bella.ui.crearMensajeHTML
-import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.ResultSet
 import java.sql.SQLException
@@ -81,7 +78,7 @@ class activity_correo : AppCompatActivity() {
 
                     if (correoExiste) {
                         val codigoAleatorio = (100000..999999).random()
-                        val mensajeHTML = crearMensajeHTML(codigoAleatorio)
+                        val mensajeHTML = crearMensajeHTML(codigoAleatorio.toString())
 
                         enviarCorreo(
                             correoUsuario,

@@ -1,7 +1,6 @@
 package ptc.proyecto.estrella.bella
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -31,6 +30,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import modelo.ClaseConexion
 import modelo.listaUsuarios
+import ptc.proyecto.estrella.bella.ui.crearMensajeHTML
+import ptc.proyecto.estrella.bella.ui.enviarCorreo
 import java.security.MessageDigest
 import java.sql.Connection
 import java.sql.PreparedStatement
@@ -152,16 +153,28 @@ class activity_signup : AppCompatActivity() {
         }
 
         btnCrearCuenta.setOnClickListener {
-            Log.d("SignupActivity", "Botón crear cuenta presionado")
             btnCrearCuenta.visibility = View.GONE
             AnimCarga.visibility = View.VISIBLE
             if (validarFormulario()) {
-                Log.d("SignupActivity", "Formulario válido")
+                val codigoVerificacion = generarCodigoVerificacion()
+                val correo = txtCorreo.editText?.text.toString().trim()
+
+                // Lanzar una corrutina para enviar el correo
                 GlobalScope.launch(Dispatchers.Main) {
-                    subirImagenYCrearCuenta()
+                    enviarCorreoVerificacion(correo, codigoVerificacion)
+
+                    // Llamamos a la Activity de confirmación de correo
+                    val intent = Intent(this@activity_signup, activity_ConfirmarCorreo::class.java)
+                    intent.putExtra("nombre", txtNombre.editText?.text.toString().trim())
+                    intent.putExtra("correo", correo)
+                    intent.putExtra("contraseña", encriptarSHA256(txtContraseña.editText?.text.toString().trim()))
+                    intent.putExtra("fotoPerfil", imageUri.toString())
+                    intent.putExtra("codigoVerificacion", codigoVerificacion)
+                    startActivity(intent)
                 }
             } else {
-                Log.d("SignupActivity", "Formulario inválido")
+                btnCrearCuenta.visibility = View.VISIBLE
+                AnimCarga.visibility = View.GONE
             }
         }
 
@@ -177,6 +190,29 @@ class activity_signup : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
+
+    private suspend fun enviarCorreoVerificacion(correo: String, codigoVerificacion: String) {
+        val mensajeHTML = crearMensajeHTML(codigoVerificacion)
+        enviarCorreo(
+            correo,
+            "Confirmación de correo electronico",
+            mensajeHTML
+        )
+
+        val intent = Intent(this@activity_signup, activity_codigo::class.java)
+        intent.putExtra("codigo_recuperacion", codigoVerificacion)
+        intent.putExtra("correo_usuario", correo)
+        intent.putExtra("correo", correo)
+        startActivity(intent)
+        finish()
+
+        Toast.makeText(this, "Correo de verificación enviado", Toast.LENGTH_SHORT).show()
+    }
+
+
+    private fun generarCodigoVerificacion(): String {
+        return (100000..999999).random().toString()  // Genera un código de 6 dígitos
     }
 
     private fun openGallery() {

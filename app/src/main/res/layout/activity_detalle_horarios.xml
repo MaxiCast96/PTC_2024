@@ -61,12 +61,25 @@
         <TextView
             android:id="@+id/txtDescripcion"
             android:layout_width="match_parent"
-            android:layout_height="117dp"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="88dp"
             android:layout_marginHorizontal="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="2dp"
             android:fontFamily="@font/montserrat_medium"
             android:text="Descripcion"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/txtPrecio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="2dp"
+            android:fontFamily="@font/montserrat_medium"
+            android:text="Precio: $5.00"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textSize="14sp" />

@@ -45,7 +45,7 @@ suspend fun enviarCorreo(receptor: String, asunto: String, mensaje: String) = wi
     }
 }
 
-fun crearMensajeHTML(codigo: Int): String {
+fun crearMensajeHTML(codigo: String): String {
     return """
         <!DOCTYPE html>
         <html>
@@ -84,9 +84,9 @@ fun crearMensajeHTML(codigo: Int): String {
         </head>
         <body>
             <div class="container">
-                <h1>Recuperación de Contraseña</h1>
+                <h1>Código de confirmación</h1>
                 <p>¡Hola!</p>
-                <p>Este es tu código de recuperación:</p>
+                <p>Este es tu código de un solo uso:</p>
                 <div class="codigo">$codigo</div>
                 <p class="footer">Por favor, no compartas este código con nadie.</p>
             </div>

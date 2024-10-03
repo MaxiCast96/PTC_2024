@@ -18,9 +18,13 @@
         android:theme="@style/Theme.Material3.Dark"
         tools:targetApi="31">
         <activity
+            android:name=".activity_ConfirmarCorreo"
+            android:exported="false"
+            android:theme="@style/Theme.Material3.Dark.NoActionBar" />
+        <activity
             android:name=".activity_edit_account"
             android:exported="false"
-            android:theme="@style/Theme.Material3.Dark.NoActionBar"/>
+            android:theme="@style/Theme.Material3.Dark.NoActionBar" />
         <activity
             android:name=".activity_connection_error"
             android:exported="false"
@@ -43,11 +47,11 @@
         <activity
             android:name=".activity_seleccion_asientos"
             android:exported="false"
-            android:theme="@style/Theme.Material3.Dark.NoActionBar"/>
+            android:theme="@style/Theme.Material3.Dark.NoActionBar" />
         <activity
             android:name=".activity_pago"
             android:exported="false"
-            android:theme="@style/Theme.Material3.Dark.NoActionBar"/>
+            android:theme="@style/Theme.Material3.Dark.NoActionBar" />
         <activity
             android:name=".activity_signup"
             android:exported="false" />

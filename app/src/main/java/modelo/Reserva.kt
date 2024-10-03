@@ -9,5 +9,6 @@ data class Reserva(
     val salaId: String,
     val fechaReserva: Date,
     val totalPago: Double,
-    val metodoPago: String
+    val metodoPago: String,
+    val horaFuncion: String
 )

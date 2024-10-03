@@ -1,6 +1,7 @@
 package RecyclerViewHelpers
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,23 +36,24 @@ class ReservaAdapter(private val reservas: List<Reserva>) :
         val userViewModel = (holder.itemView.context as MainActivity).userViewModel
         val nombreUsuario = userViewModel.nombre.value ?: "Desconocido"
 
-        println("Reserva en posición $position: ${reserva.nombrePelicula}, Fecha: ${reserva.fechaReserva}")
+        // Verificación mediante logs
+        Log.d("ReservaAdapter", "Reserva en posición $position: ${reserva.nombrePelicula}, Fecha: ${reserva.fechaReserva}, Sala: ${reserva.salaId}")
 
         holder.btnDetalles.setOnClickListener {
             val context = holder.itemView.context
             val intent = Intent(context, activity_detalle_venta::class.java)
             intent.putExtra("reservaId", reserva.id)
-            intent.putExtra("peliculaId", reserva.nombrePelicula)
-            intent.putExtra("salaId", reserva.salaId)
+            intent.putExtra("nombrePelicula", reserva.nombrePelicula)  // Pasar correctamente el nombre de la película
+            intent.putExtra("nombreSala", reserva.salaId)  // Pasar correctamente el nombre de la sala
             intent.putExtra("fechaReserva", reserva.fechaReserva.time)
             intent.putExtra("totalPago", reserva.totalPago)
             intent.putExtra("metodoPago", reserva.metodoPago)
-            intent.putExtra("nombreUsuario", nombreUsuario)
+            intent.putExtra("nombreUsuario", nombreUsuario)  // Pasar correctamente el nombre de usuario
+            intent.putExtra("horaFuncion", reserva.horaFuncion)  // Pasar correctamente la hora de la función
             context.startActivity(intent)
         }
+
     }
-
-
 
     override fun getItemCount() = reservas.size
 }

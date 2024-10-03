@@ -84,14 +84,14 @@ class fragment_historial : Fragment() {
             val conexion: Connection? = ClaseConexion().cadenaConexion()
             if (conexion != null) {
                 val query = """
-                SELECT r.funcionand_id, u.nombre AS nombre_usuario, p.titulo AS nombre_pelicula, 
-                       s.nombre AS nombre_sala, r.fecha_reserva, r.total_pago
-                FROM Reservas_Android r 
-                INNER JOIN Usuarios u ON r.usuario_id = u.usuario_id 
-                INNER JOIN Peliculas p ON r.pelicula_id = p.pelicula_id 
-                INNER JOIN Salas_PTC s ON r.sala_id = s.sala_id 
-                WHERE r.usuario_id = ?
-                """
+            SELECT r.funcionand_id, u.nombre AS nombre_usuario, p.titulo AS nombre_pelicula, 
+                   s.nombre AS nombre_sala, r.fecha_reserva, r.total_pago, r.Hora_funcion
+            FROM Reservas_Android r 
+            INNER JOIN Usuarios u ON r.usuario_id = u.usuario_id 
+            INNER JOIN Peliculas p ON r.pelicula_id = p.pelicula_id 
+            INNER JOIN Salas_PTC s ON r.sala_id = s.sala_id 
+            WHERE r.usuario_id = ?
+            """
                 val preparedStatement: PreparedStatement = conexion.prepareStatement(query)
                 preparedStatement.setString(1, usuarioId)
                 val resultSet: ResultSet = preparedStatement.executeQuery()
@@ -103,6 +103,7 @@ class fragment_historial : Fragment() {
                     val nombreSala = resultSet.getString("nombre_sala")
                     val fechaReserva = resultSet.getDate("fecha_reserva")
                     val totalPago = resultSet.getDouble("total_pago")
+                    val horaFuncion = resultSet.getString("Hora_funcion") // Obtener la hora de la función
 
                     reservas.add(
                         Reserva(
@@ -112,7 +113,8 @@ class fragment_historial : Fragment() {
                             nombreSala,
                             fechaReserva,
                             totalPago,
-                            "Tarjeta"
+                            "Tarjeta",
+                            horaFuncion  // Añadir la hora de la función al objeto Reserva
                         )
                     )
                 }
@@ -127,6 +129,7 @@ class fragment_historial : Fragment() {
 
         return reservas
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
