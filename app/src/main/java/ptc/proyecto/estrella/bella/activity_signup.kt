@@ -172,6 +172,8 @@ class activity_signup : AppCompatActivity() {
                     intent.putExtra("fotoPerfil", imageUri)
                     intent.putExtra("codigoVerificacion", codigoVerificacion)
                     startActivity(intent)
+                    btnCrearCuenta.visibility = View.VISIBLE
+                    AnimCarga.visibility = View.GONE
                 }
             } else {
                 btnCrearCuenta.visibility = View.VISIBLE
@@ -201,19 +203,13 @@ class activity_signup : AppCompatActivity() {
             mensajeHTML
         )
 
-        val intent = Intent(this@activity_signup, activity_codigo::class.java)
-        intent.putExtra("codigo_recuperacion", codigoVerificacion)
-        intent.putExtra("correo_usuario", correo)
-        intent.putExtra("correo", correo)
-        startActivity(intent)
-        finish()
-
         Toast.makeText(this, "Correo de verificación enviado", Toast.LENGTH_SHORT).show()
     }
 
 
     private fun generarCodigoVerificacion(): String {
-        return (100000..999999).random().toString()  // Genera un código de 6 dígitos
+        // Genera un código de 6 dígitos
+        return (100000..999999).random().toString()
     }
 
     private fun openGallery() {
@@ -324,48 +320,16 @@ class activity_signup : AppCompatActivity() {
         val uuid = UUID.randomUUID().toString()
         val btnCrearCuenta = findViewById<Button>(R.id.btnCrearCuenta)
         val AnimCarga = findViewById<LottieAnimationView>(R.id.AnimCarga)
+        val codigoVerificacion = generarCodigoVerificacion()
 
-        val nuevoUsuario = listaUsuarios(uuid, nombre, correo, contraseñaEncriptada, rolId, fotoPerfil)
-
-        val connection = obtenerConexionBD()
-        if (connection != null) {
-            Log.d("SignupActivity", "Conexión a la base de datos exitosa")
-            val sql = "INSERT INTO Usuarios (usuario_id, nombre, email, contraseña, rol_id, foto_perfil) VALUES (?, ?, ?, ?, ?, ?)"
-            val statement: PreparedStatement = connection.prepareStatement(sql)
-            statement.setString(1, nuevoUsuario.uuid)
-            statement.setString(2, nuevoUsuario.nombre)
-            statement.setString(3, nuevoUsuario.email)
-            statement.setString(4, nuevoUsuario.contraseña)
-            statement.setInt(5, nuevoUsuario.rol_id)
-            statement.setString(6, nuevoUsuario.foto_perfil)
-
-            val result = statement.executeUpdate()
-            if (result > 0) {
-                Log.d("SignupActivity", "Cuenta creada exitosamente")
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@activity_signup, "Cuenta creada exitosamente", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this@activity_signup, activity_login::class.java)
-                    startActivity(intent)
-                }
-            } else {
-                Log.e("SignupActivity", "Error al crear la cuenta")
-                btnCrearCuenta.visibility = View.VISIBLE
-                AnimCarga.visibility = View.GONE
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@activity_signup, "Error al crear la cuenta", Toast.LENGTH_SHORT).show()
-                }
-            }
-            statement.close()
-            connection.close()
-        } else {
-            Log.e("SignupActivity", "Error al conectar con la base de datos")
-
-            withContext(Dispatchers.Main) {
-                btnCrearCuenta.visibility = View.VISIBLE
-                AnimCarga.visibility = View.GONE
-                Toast.makeText(this@activity_signup, "Error al conectar con la base de datos", Toast.LENGTH_SHORT).show()
-            }
-        }
+        val intent = Intent(this@activity_signup, activity_ConfirmarCorreo::class.java)
+        intent.putExtra("nombre", txtNombre.editText?.text.toString().trim())
+        intent.putExtra("correo", correo)
+        intent.putExtra("contraseña", encriptarSHA256(txtContraseña.editText?.text.toString().trim()))
+        println("ESTA ES LA IMAGEN ${imageUri}")
+        intent.putExtra("fotoPerfil", imageUri)
+        intent.putExtra("codigoVerificacion", codigoVerificacion)
+        startActivity(intent)
     }
 
     private fun encriptarSHA256(texto: String): String {
