@@ -45,9 +45,10 @@ class HomeFragment : Fragment() {
 
     private fun startQueryLoop() {
         scope.launch(Dispatchers.IO) {
-            while (isActive) { // Mantiene la corrutina activa mientras el scope esté activo
-                fetchPeliculas() // Ejecuta la consulta
-                delay(1000) // Espera 1 segundo antes de la siguiente ejecución
+            while (isActive) {
+                delay(1000)
+                // Ejecuta la consulta
+                fetchPeliculas()
             }
         }
     }

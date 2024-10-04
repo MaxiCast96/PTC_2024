@@ -7,16 +7,45 @@
     android:padding="8dp">
 
     <ImageView
-        android:id="@+id/posterImageView"
+        android:id="@+id/ImageView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/rounded_corners_image"
-        android:backgroundTint="#D0C1C1"
+        android:backgroundTint="#1F1C4B"
         android:scaleType="centerCrop"
         app:layout_constraintDimensionRatio="H,3:4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/AnimCarga"
+        android:layout_width="100dp"
+        android:layout_height="77dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.469"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/cargando">
+
+    </com.airbnb.lottie.LottieAnimationView>
+
+    <ImageView
+        android:id="@+id/posterImageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/rounded_corners_image"
+        android:backgroundTint="#001F1C4B"
+        android:scaleType="centerCrop"
+        app:layout_constraintDimensionRatio="H,3:4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <TextView
         android:id="@+id/tituloTextView"

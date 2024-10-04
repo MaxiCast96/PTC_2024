@@ -168,7 +168,8 @@ class activity_signup : AppCompatActivity() {
                     intent.putExtra("nombre", txtNombre.editText?.text.toString().trim())
                     intent.putExtra("correo", correo)
                     intent.putExtra("contraseña", encriptarSHA256(txtContraseña.editText?.text.toString().trim()))
-                    intent.putExtra("fotoPerfil", imageUri.toString())
+                    println("ESTA ES LA IMAGEN ${imageUri}")
+                    intent.putExtra("fotoPerfil", imageUri)
                     intent.putExtra("codigoVerificacion", codigoVerificacion)
                     startActivity(intent)
                 }
