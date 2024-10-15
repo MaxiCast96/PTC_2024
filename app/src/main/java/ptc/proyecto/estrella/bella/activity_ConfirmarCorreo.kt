@@ -2,6 +2,7 @@ package ptc.proyecto.estrella.bella
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -34,6 +35,7 @@ class activity_ConfirmarCorreo : AppCompatActivity() {
         val btnConfirmarCodigo = findViewById<Button>(R.id.btnComprobarCodigo)
 
         btnConfirmarCodigo.setOnClickListener {
+            Log.d("Verificar Correo","Boton verificar presionado")
             val codigoIngresado = editCodigoVerificacion.editText?.text.toString().trim()
 
 

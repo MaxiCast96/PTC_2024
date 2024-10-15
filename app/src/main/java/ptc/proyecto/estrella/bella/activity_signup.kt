@@ -27,6 +27,7 @@ import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import modelo.ClaseConexion
 import modelo.listaUsuarios
@@ -156,30 +157,39 @@ class activity_signup : AppCompatActivity() {
             btnCrearCuenta.visibility = View.GONE
             AnimCarga.visibility = View.VISIBLE
             if (validarFormulario()) {
-                val codigoVerificacion = generarCodigoVerificacion()
+                val nombre = txtNombre.editText?.text.toString().trim()
                 val correo = txtCorreo.editText?.text.toString().trim()
+                val contraseña = encriptarSHA256(txtContraseña.editText?.text.toString().trim())
+                val uuid = UUID.randomUUID().toString() // Genera un UUID
+                val codigoVerificacion = generarCodigoVerificacion() // Genera el código de verificación
 
-                // Lanzar una corrutina para enviar el correo
+                // Crear el objeto Usuario con los parámetros requeridos
+                val usuario = Usuario(
+                    nombre = nombre,
+                    email = correo,
+                    contraseña = contraseña,
+                    fotoPerfil = "", // Esto se completará más adelante con el enlace de Firebase
+                    uuid = uuid
+                )
+
+                // Lanzar una corrutina para subir la imagen y crear la cuenta
                 GlobalScope.launch(Dispatchers.Main) {
-                    enviarCorreoVerificacion(correo, codigoVerificacion)
-
-                    // Llamamos a la Activity de confirmación de correo
-                    val intent = Intent(this@activity_signup, activity_ConfirmarCorreo::class.java)
-                    intent.putExtra("nombre", txtNombre.editText?.text.toString().trim())
-                    intent.putExtra("correo", correo)
-                    intent.putExtra("contraseña", encriptarSHA256(txtContraseña.editText?.text.toString().trim()))
-                    println("ESTA ES LA IMAGEN ${imageUri}")
-                    intent.putExtra("fotoPerfil", imageUri)
-                    intent.putExtra("codigoVerificacion", codigoVerificacion)
-                    startActivity(intent)
-                    btnCrearCuenta.visibility = View.VISIBLE
-                    AnimCarga.visibility = View.GONE
+                    try {
+                        uploadImageAndCreateAccount(imageUri, usuario, codigoVerificacion)
+                        // Enviar correo de verificación una vez que el usuario se haya creado
+                        enviarCorreoVerificacion(correo, codigoVerificacion)
+                    } finally {
+                        btnCrearCuenta.visibility = View.VISIBLE
+                        AnimCarga.visibility = View.GONE
+                    }
                 }
             } else {
                 btnCrearCuenta.visibility = View.VISIBLE
                 AnimCarga.visibility = View.GONE
             }
         }
+
+
 
         btn_login.setOnClickListener {
             val intent = Intent(this, activity_login::class.java)
@@ -279,9 +289,7 @@ class activity_signup : AppCompatActivity() {
         return true
     }
 
-    private suspend fun subirImagenYCrearCuenta() {
-        val btnCrearCuenta = findViewById<Button>(R.id.btnCrearCuenta)
-        val AnimCarga = findViewById<LottieAnimationView>(R.id.AnimCarga)
+    fun uploadImageAndCreateAccount(imageUri: Uri?, usuario: Usuario, codigoVerificacion: String) {
         if (imageUri != null) {
             val storageRef = FirebaseStorage.getInstance().reference
             val fileRef = storageRef.child("perfil/${UUID.randomUUID()}.jpg")
@@ -290,47 +298,37 @@ class activity_signup : AppCompatActivity() {
             upload.addOnSuccessListener {
                 fileRef.downloadUrl.addOnSuccessListener { uri ->
                     val fotoPerfil = uri.toString()
-                    Log.d("SignupActivity", "Imagen subida exitosamente: $fotoPerfil")
-                    GlobalScope.launch(Dispatchers.IO) {
-                        crearCuenta(fotoPerfil)
-                    }
+                    // Actualiza la foto de perfil en el usuario
+                    usuario.fotoPerfil = fotoPerfil
+                    // Envía los datos a la base de datos, pasando el código de verificación
+                    enviarDatosRegistro(usuario, codigoVerificacion)
                 }
             }.addOnFailureListener {
-                runOnUiThread {
-                    Toast.makeText(this, "Error al subir la imagen", Toast.LENGTH_SHORT).show()
-                    Log.e("SignupActivity", "Error al subir la imagen", it)
-                    btnCrearCuenta.visibility = View.VISIBLE
-                    AnimCarga.visibility = View.GONE
-                }
+                Log.e("SignupActivity", "Error al subir la imagen: ${it.message}")
             }
         } else {
-            Log.d("SignupActivity", "No se seleccionó imagen, usando imagen por defecto")
-            GlobalScope.launch(Dispatchers.IO) {
-                crearCuenta("https://i.imgur.com/FvJsrt9.png")
-            }
+            // Usa una imagen por defecto y procede, pasando el código de verificación
+            usuario.fotoPerfil = "https://i.imgur.com/FvJsrt9.png"
+            enviarDatosRegistro(usuario, codigoVerificacion)
         }
     }
 
-    private suspend fun crearCuenta(fotoPerfil: String) {
-        val nombre = txtNombre.editText?.text.toString().trim()
-        val correo = txtCorreo.editText?.text.toString().trim()
-        val contraseña = txtContraseña.editText?.text.toString().trim()
-        val contraseñaEncriptada = encriptarSHA256(contraseña)
-        val rolId = 1
-        val uuid = UUID.randomUUID().toString()
-        val btnCrearCuenta = findViewById<Button>(R.id.btnCrearCuenta)
-        val AnimCarga = findViewById<LottieAnimationView>(R.id.AnimCarga)
-        val codigoVerificacion = generarCodigoVerificacion()
 
+    private fun enviarDatosRegistro(usuario: Usuario, codigoVerificacion: String) {
         val intent = Intent(this@activity_signup, activity_ConfirmarCorreo::class.java)
-        intent.putExtra("nombre", txtNombre.editText?.text.toString().trim())
-        intent.putExtra("correo", correo)
-        intent.putExtra("contraseña", encriptarSHA256(txtContraseña.editText?.text.toString().trim()))
-        println("ESTA ES LA IMAGEN ${imageUri}")
-        intent.putExtra("fotoPerfil", imageUri)
-        intent.putExtra("codigoVerificacion", codigoVerificacion)
+        intent.putExtra("nombre", usuario.nombre)
+        intent.putExtra("correo", usuario.email)
+        intent.putExtra("contraseña", usuario.contraseña)
+        intent.putExtra("fotoPerfil", usuario.fotoPerfil)  // El link de Firebase o imagen por defecto
+        intent.putExtra("uuid", usuario.uuid)
+        intent.putExtra("codigoVerificacion", codigoVerificacion) // Aquí se pasa el código generado
         startActivity(intent)
     }
+
+
+
+
+
 
     private fun encriptarSHA256(texto: String): String {
         val md = MessageDigest.getInstance("SHA-256")
@@ -339,14 +337,4 @@ class activity_signup : AppCompatActivity() {
     }
 }
 
-    private fun obtenerConexionBD(): Connection? {
-        return try {
-            val claseConexion = ClaseConexion()
-            claseConexion.cadenaConexion()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Log.e("SignupActivity", "Error al obtener conexión a la base de datos", e)
-            null
-        }
-    }
 

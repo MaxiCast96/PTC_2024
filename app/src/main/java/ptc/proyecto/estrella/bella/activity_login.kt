@@ -226,4 +226,4 @@ class activity_login : AppCompatActivity() {
     }
 }
 
-data class Usuario(val nombre: String, val email: String, val contraseña: String, val fotoPerfil: String?, val uuid:String)
+data class Usuario(val nombre: String, val email: String, val contraseña: String, var fotoPerfil: String?, val uuid:String)
